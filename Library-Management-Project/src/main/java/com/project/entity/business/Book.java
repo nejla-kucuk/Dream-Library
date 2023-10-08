@@ -7,7 +7,6 @@ import org.springframework.lang.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.File;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,14 +20,14 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @NotNull(message = "Book name must not be empty!")
     @Size(min=2 , max =20 , message= "Book name should be at least 2 characters!")
     private String bookName;
 
     @NotNull(message = "Book ISBN must not be empty!")
-    @Column(length = 17)
+    @Size(min = 17, max = 17, message = "ISBN number must be exactly 17 characters long!")
     @Pattern(regexp = "^\\d{3}-\\d{2}-\\d{5}-\\d{2}-\\d$",
             message = "Please enter a valid ISBN number in the format 999-99-99999-99-9 !")
     private String isbn;
