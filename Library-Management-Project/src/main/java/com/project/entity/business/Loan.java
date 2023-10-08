@@ -1,13 +1,11 @@
 package com.project.entity.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.entity.user.User;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -47,5 +45,12 @@ public class Loan {
     @Size(max = 300, message = "The notes should be limited to 300 characters!")
     // Only for admin and employee
     private String notes;
+
+
+
+    //Realitions
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

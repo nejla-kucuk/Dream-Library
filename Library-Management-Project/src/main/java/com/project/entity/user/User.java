@@ -1,6 +1,8 @@
 package com.project.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.entity.business.Loan;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -10,7 +12,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -73,5 +77,15 @@ public class User {
 
     @NotNull
     private boolean builtIn = false;
+
+
+    // Relations
+    @OneToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // JSON formatta bu bilgi görülmez.
+    @JoinColumn(name = "userRole_id")
+    private UserRole userRole;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
+    private List<Loan> loans = new ArrayList<>();
 
 }
