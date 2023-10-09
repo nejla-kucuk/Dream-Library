@@ -53,4 +53,8 @@ public class Loan {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "book_id")
+    private Book book;
+
 }

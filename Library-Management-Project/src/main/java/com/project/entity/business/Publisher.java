@@ -2,12 +2,11 @@ package com.project.entity.business;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 
@@ -28,4 +27,8 @@ public class Publisher {
 
     @NotNull
     private boolean builtIn = false;
+
+    // Realitions
+    @OneToMany(mappedBy = "publisher",cascade = CascadeType.REMOVE)
+    private List<Book> books = new ArrayList<>();
 }

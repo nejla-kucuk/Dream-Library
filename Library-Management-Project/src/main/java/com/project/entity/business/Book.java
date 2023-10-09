@@ -8,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 
@@ -72,5 +74,23 @@ public class Book {
 
     @NotNull
     private boolean builtIn = false;
+
+
+    // Realitions
+    @OneToMany(mappedBy = "book",cascade = CascadeType.REMOVE)
+    private List<Loan> loans = new ArrayList<>();
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "author_id")
+    private Author author;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
 
 }
