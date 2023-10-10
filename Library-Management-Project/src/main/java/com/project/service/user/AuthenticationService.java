@@ -1,18 +1,31 @@
 package com.project.service.user;
 
+import com.project.entity.user.User;
+import com.project.exception.BadRequestException;
+import com.project.payload.mapper.UserMapper;
+import com.project.payload.message.ErrorMessages;
 import com.project.payload.request.authentication.SigninRequest;
+import com.project.payload.request.business.UpdatePasswordRequest;
 import com.project.payload.response.authentication.AuthResponse;
+import com.project.payload.response.user.UserResponse;
+import com.project.repository.user.UserRepository;
 import com.project.security.jwt.JwtUtils;
 import com.project.security.sevice.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,6 +37,12 @@ public class AuthenticationService {
     private  final AuthenticationManager authenticationManager;
 
     private final JwtUtils jwtUtils;
+
+    private final UserRepository userRepository;
+
+    private final UserMapper userMapper;
+
+    private final PasswordEncoder passwordEncoder;
 
     // Signin()********
     public ResponseEntity<AuthResponse> authenticateUser(SigninRequest signinRequest) {
@@ -58,5 +77,38 @@ public class AuthenticationService {
 
         return ResponseEntity.ok(authResponse.build());
 
+    }
+
+    // FindByEmail()*********
+    public UserResponse findByEmail(String email) {
+
+        User user = userRepository.findByEmailEquals(email);
+
+        return userMapper.mapUserToUserResponse(user);
+
+    }
+
+    // Not: updatePassword() ************************************
+    public void updatePassword(UpdatePasswordRequest updatePasswordRequest,
+                               HttpServletRequest request) {
+
+        String email = (String) request.getAttribute("email");
+
+        User user = userRepository.findByEmailEquals(email);
+
+
+        if(Boolean.TRUE.equals(user.isBuiltIn())){
+            throw  new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
+
+
+        if(!passwordEncoder.matches(updatePasswordRequest.getOldPassword(),user.getPassword())){
+            throw  new BadRequestException(ErrorMessages.PASSWORD_NOT_MATCHED);
+        }
+
+        String encodedPassword = passwordEncoder.encode(updatePasswordRequest.getNewPassword());
+        user.setPassword(encodedPassword);
+
+        userRepository.save(user);
     }
 }
