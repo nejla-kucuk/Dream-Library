@@ -84,7 +84,6 @@ public class User {
     // Relations
     @OneToOne
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // JSON formatta bu bilgi görülmez.
-    @JoinColumn(name = "userRole_id")
     private UserRole userRole;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)

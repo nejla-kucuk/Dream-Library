@@ -50,11 +50,9 @@ public class Loan {
 
     //Realitions
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(cascade = CascadeType.PERSIST) // OneToOne olabilir mi?
-    @JoinColumn(name = "book_id")
     private Book book;
 
 }

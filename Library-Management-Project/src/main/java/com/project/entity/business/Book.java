@@ -84,15 +84,12 @@ public class Book {
     private List<Loan> loans = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "author_id")
     private Author author;
 
     @ManyToOne(cascade = CascadeType.PERSIST) //ManyToMay olabilir mi?
-    @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "category_id")
     private Category category;
 
 
