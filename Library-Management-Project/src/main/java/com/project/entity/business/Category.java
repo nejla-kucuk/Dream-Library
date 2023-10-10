@@ -33,6 +33,6 @@ public class Category {
     private int sequence;
 
     // Realitions
-    @OneToMany(mappedBy = "category",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
     private List<Book> books = new ArrayList<>();
 }

@@ -1,6 +1,7 @@
 package com.project.entity.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -32,6 +33,7 @@ public class Book {
     @Size(min = 17, max = 17, message = "ISBN number must be exactly 17 characters long!")
     @Pattern(regexp = "^\\d{3}-\\d{2}-\\d{5}-\\d{2}-\\d$",
             message = "Please enter a valid ISBN number in the format 999-99-99999-99-9 !")
+    @Column(unique = true)
     private String isbn;
 
     @Nullable
@@ -78,13 +80,14 @@ public class Book {
 
     // Realitions
     @OneToMany(mappedBy = "book",cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<Loan> loans = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "author_id")
     private Author author;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST) //ManyToMay olabilir mi?
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 

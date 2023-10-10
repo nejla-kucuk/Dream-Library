@@ -51,6 +51,7 @@ public class User {
     @Size(min = 12, max = 12,message = "Your phone number should be 12 characters long!")
     @Pattern(regexp = "^((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$",
             message = "Please, enter valid phone number")
+    @Column(unique = true)
     private String phone;
 
     @Nullable
@@ -60,6 +61,7 @@ public class User {
     @NotNull(message = "Email must not be empty!")
     @Email(message = "Please, enter valid email!")
     @Size(min=10, max=80 , message = "Your email should be between 10 and 80 chars!")
+    @Column(unique = true)
     private String email;
 
     @NotNull(message = "Please, enter your password!")
