@@ -44,5 +44,4 @@ public class UserResponse {
 
     private String userRole;
 
-
 }
