@@ -9,8 +9,11 @@ import com.project.payload.request.user.UserRequest;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.UserResponse;
 import com.project.repository.user.UserRepository;
+import com.project.service.helper.PageableHelper;
 import com.project.service.validation.UniquePropertyValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,8 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final PageableHelper pageableHelper;
+
     // Register()********
     public ResponseMessage<UserResponse> registerUser(UserRequest userRequest) {
 
@@ -44,4 +49,14 @@ public class UserService {
                 .build();
 
     }
+
+
+    // Loans()********
+    public Page<UserResponse> getUserByPage(int page, int size, String sort, String type) {
+
+        Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
+
+        return userRepository.findAll(pageable).map(userMapper::mapUserToUserResponse);
+    }
+
 }
