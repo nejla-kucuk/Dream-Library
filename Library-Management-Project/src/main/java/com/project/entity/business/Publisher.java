@@ -29,6 +29,6 @@ public class Publisher {
     private boolean builtIn = false;
 
     // Realitions
-    @OneToMany(mappedBy = "publisher",cascade = CascadeType.REMOVE)
-    private List<Book> books = new ArrayList<>();
+   //@OneToMany(mappedBy = "publisher",cascade = CascadeType.REMOVE)
+   //private List<Book> books = new ArrayList<>();
 }

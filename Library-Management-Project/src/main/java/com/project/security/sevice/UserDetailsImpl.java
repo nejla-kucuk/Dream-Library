@@ -8,10 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -36,14 +33,18 @@ public class UserDetailsImpl implements UserDetails {
                            String lastName,
                            String password,
                            String email,
-                           String role) {
+                           Set<String> roles) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
+
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(role));
+        for (String role : roles) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(role));
+        }
+
         this.authorities = grantedAuthorities;
     }
 

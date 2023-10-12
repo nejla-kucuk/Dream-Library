@@ -34,15 +34,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private  final AuthenticationManager authenticationManager;
-
-    private final JwtUtils jwtUtils;
-
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
 
     private final PasswordEncoder passwordEncoder;
+
+    private  final AuthenticationManager authenticationManager;
+
+    private final JwtUtils jwtUtils;
 
     // Signin()********
     public ResponseEntity<AuthResponse> authenticateUser(SigninRequest signinRequest) {
@@ -65,19 +65,19 @@ public class AuthenticationService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        Optional<String> role = roles.stream().findFirst();
+        // Optional<String> role = roles.stream().findFirst();
 
         AuthResponse.AuthResponseBuilder authResponse = AuthResponse.builder();
         authResponse.email(userDetails.getEmail());
         authResponse.firstName(userDetails.getFirstName());
         authResponse.lastName(userDetails.getLastName());
         authResponse.token(token.substring(7));
-
-        role.ifPresent(authResponse::role);
+        authResponse.roles(roles); //TODO: null veya empty
 
         return ResponseEntity.ok(authResponse.build());
 
     }
+
 
     // FindByEmail()*********
     public UserResponse findByEmail(String email) {

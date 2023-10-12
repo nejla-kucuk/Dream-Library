@@ -2,6 +2,9 @@ package com.project.payload.message;
 
 public class ErrorMessages {
 
+
+
+
     private ErrorMessages(){}
 
     public static final String NOT_PERMITTED_METHOD_MESSAGE = "You do not have any permission to do this operation!";
@@ -13,4 +16,8 @@ public class ErrorMessages {
 
      public static final String ROLE_NOT_FOUND = "There is no role like that, check the database!";
     public static final String NOT_FOUND_USER_MESSAGE = "Error: User not found with ID %s! ";
+
+    public static final String NOT_PERMITTED_USER_MESSAGE = "Error: You do not have the authority!" ;
+
+    public static final String NOT_ROLE_TYPE_VALID_MESSAGE = "Error: The role type is not valid. E.G: Admin - Employee - Member";
 }

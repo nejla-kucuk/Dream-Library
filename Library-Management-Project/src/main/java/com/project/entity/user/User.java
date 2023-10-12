@@ -11,10 +11,12 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -56,7 +58,7 @@ public class User {
 
     @Nullable
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @NotNull(message = "Email must not be empty!")
     @Email(message = "Please, enter valid email!")
@@ -82,11 +84,11 @@ public class User {
 
 
     // Relations
-    @OneToOne
+    @OneToMany
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // JSON formatta bu bilgi görülmez.
-    private UserRole userRole;
+    private Set<UserRole> userRole;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
-    private List<Loan> loans = new ArrayList<>();
+   // @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
+   // private List<Loan> loans = new ArrayList<>();
 
 }

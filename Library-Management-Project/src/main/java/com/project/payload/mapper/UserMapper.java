@@ -1,14 +1,18 @@
 package com.project.payload.mapper;
 
-import com.project.entity.enums.RoleType;
+
 import com.project.entity.user.User;
-import com.project.entity.user.UserRole;
 import com.project.payload.request.user.UserRequest;
+import com.project.payload.response.business.LoanResponse;
 import com.project.payload.response.user.UserResponse;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
+
 
     public UserResponse mapUserToUserResponse(User user){
         return UserResponse.builder()
@@ -19,7 +23,8 @@ public class UserMapper {
                 .birthDate(user.getBirthDate())
                 .email(user.getEmail())
                 .address(user.getAddress())
-                .userRole(user.getUserRole().getRoleType().name())
+                .score(user.getScore())
+                //.userRole(user.getUserRole().getRoleType().name())
                 .build();
     }
 
@@ -29,8 +34,8 @@ public class UserMapper {
                 .lastName(userRequest.getLastName())
                 .address(userRequest.getAddress())
                 .phone(userRequest.getPhone())
-                .birthDate(userRequest.getBirthDate())
-                .createDate(userRequest.getCreateDate())
+                .email(userRequest.getEmail())
+                .password(userRequest.getPassword())
                 .build();
     }
 
@@ -45,7 +50,8 @@ public class UserMapper {
                 .phone(userRequest.getPhone())
                 .birthDate(userRequest.getBirthDate())
                 .createDate(userRequest.getCreateDate())
-                .builtIn(userRequest.isBuiltIn())
                 .build();
     }
+
+
 }

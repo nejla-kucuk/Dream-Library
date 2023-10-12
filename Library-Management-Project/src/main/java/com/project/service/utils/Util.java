@@ -8,6 +8,8 @@ import com.project.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Component
 @RequiredArgsConstructor
 public class Util {
@@ -27,6 +29,13 @@ public class Util {
 
         return false;
 
+    }
+
+    public User getAttributeUser(HttpServletRequest request){
+
+        String email = (String) request.getAttribute("email");
+
+        return userRepository.findByEmailEquals(email);
     }
 
 

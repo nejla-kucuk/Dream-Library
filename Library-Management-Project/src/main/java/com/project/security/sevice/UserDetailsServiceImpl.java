@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -19,6 +22,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         User user =  userRepository.findByEmailEquals(email);
 
+        Set<String> roles = user.getUserRole()
+                .stream()
+                .map(t->t.getRoleType().getName())
+                .collect(Collectors.toSet());
 
         if (user != null) {
             return new UserDetailsImpl(
@@ -27,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     user.getLastName(),
                     user.getPassword(),
                     user.getEmail(),
-                    user.getUserRole().getRoleType().name()
+                    roles
             );
         }
 

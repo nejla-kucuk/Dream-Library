@@ -30,8 +30,8 @@ public class Author {
     private boolean builtIn = false;
 
     // Realitions
-    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
-    private List<Book> books = new ArrayList<>();
+   // @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+   // private List<Book> books = new ArrayList<>();
 
 
 }

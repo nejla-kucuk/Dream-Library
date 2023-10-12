@@ -33,11 +33,10 @@ public class Book {
     @Size(min = 17, max = 17, message = "ISBN number must be exactly 17 characters long!")
     @Pattern(regexp = "^\\d{3}-\\d{2}-\\d{5}-\\d{2}-\\d$",
             message = "Please enter a valid ISBN number in the format 999-99-99999-99-9 !")
-    @Column(unique = true)
     private String isbn;
 
     @Nullable
-    private int pageCount;
+    private Integer pageCount;
 
     @NotNull(message = "Author Id must not be empty!")
     private Long authorId;
@@ -79,17 +78,20 @@ public class Book {
 
 
     // Realitions
-    @OneToMany(mappedBy = "book",cascade = CascadeType.REMOVE)
-    @JsonIgnore
-    private List<Loan> loans = new ArrayList<>();
+   // @OneToMany(mappedBy = "book",cascade = CascadeType.REMOVE)
+   // @JsonIgnore
+   // private List<Loan> loans = new ArrayList<>();
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST) //ManyToMany olabilir
+    @JoinColumn(name = "authorId")
     private Author author;
 
-    @ManyToOne(cascade = CascadeType.PERSIST) //ManyToMay olabilir mi?
+    @ManyToOne(cascade = CascadeType.PERSIST) //ManyToMay olabilir
+    @JoinColumn(name = "publisherId")
     private Publisher publisher;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST) //ManyToMay olabilir
+    @JoinColumn(name = "categoryId")
     private Category category;
 
 

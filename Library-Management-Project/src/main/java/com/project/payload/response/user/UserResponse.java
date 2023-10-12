@@ -1,24 +1,15 @@
 package com.project.payload.response.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.lang.Nullable;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @Getter
 @Setter
@@ -27,7 +18,6 @@ import java.util.Date;
 @SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
-
     private Long id;
 
     private String firstName;
@@ -38,9 +28,11 @@ public class UserResponse {
 
     private String phone;
 
-    private Date birthDate;
+    private LocalDate birthDate;
 
     private String email;
+
+    private int score = 0 ;
 
     private String userRole;
 

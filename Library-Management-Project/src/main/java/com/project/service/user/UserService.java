@@ -1,26 +1,39 @@
 package com.project.service.user;
 
 
+import com.project.entity.business.Loan;
 import com.project.entity.enums.RoleType;
 import com.project.entity.user.User;
+import com.project.entity.user.UserRole;
 import com.project.exception.BadRequestException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mapper.UserMapper;
 import com.project.payload.message.ErrorMessages;
 import com.project.payload.message.SuccessMessages;
+import com.project.payload.request.authentication.SigninRequest;
 import com.project.payload.request.user.UserRequest;
+import com.project.payload.response.authentication.AuthResponse;
+import com.project.payload.response.business.LoanResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.UserResponse;
 import com.project.repository.user.UserRepository;
+import com.project.security.jwt.JwtUtils;
+import com.project.security.sevice.UserDetailsImpl;
 import com.project.service.helper.PageableHelper;
 import com.project.service.utils.Util;
 import com.project.service.validation.UniquePropertyValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +42,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,15 +67,23 @@ public class UserService {
 
     private final Util util;
 
+
     // Register()********
     public ResponseMessage<UserResponse> registerUser(UserRequest userRequest) {
 
-        // kayıtlı mı kontrolü
         uniquePropertyValidator.checkDuplicate(userRequest.getEmail(), userRequest.getPhone());
 
         User user = userMapper.mapUserRequestToUser(userRequest);
-        user.setUserRole(userRoleService.getUserRole(RoleType.MEMBER));
+
+        Set<UserRole> userRoleSet = new HashSet<>();
+        userRoleSet.add(userRoleService.getUserRole(RoleType.MEMBER));
+
+        user.setUserRole(userRoleSet);
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+
+        user.setBuiltIn(Boolean.FALSE);
+
+        user.setCreateDate(LocalDateTime.now());
 
         return ResponseMessage.<UserResponse>builder()
                 .object(userMapper.mapUserToUserResponse((userRepository.save(user))))
@@ -66,29 +92,60 @@ public class UserService {
 
     }
 
+    // User()********
+    public ResponseMessage<UserResponse> getUser(HttpServletRequest request) {
 
-    // getAllLoans()********
-    public Page<UserResponse> getAllLoans(int page, int size, String sort, String type) {
+        User user = util.getAttributeUser(request);
 
-        Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
-
-        return userRepository.findAll(pageable).map(userMapper::mapUserToUserResponse);
+        return ResponseMessage.<UserResponse>builder()
+                .httpStatus(HttpStatus.OK)
+                .object(userMapper.mapUserToUserResponse(user))
+                .build();
     }
 
 
+    // getAllLoans()********
+
+ //  public Page<LoanResponse> getAllLoans(HttpServletRequest request, int page, int size, String sort, String type) {
+
+ //      User user = util.getAttributeUser(request);
+
+ //      Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+
+ //      Page<User> loanPage = userRepository.findAll(pageable);
+
+ //     // Page<LoanResponse> loanResponsePage = userMapper.mapUserToLoanResponse(loanPage);
+
+ //      return loanResponsePage;
+
+ //  }
+
+
     // getAllUsers()********
-    public Page<UserResponse> getAllUsers(int page, int size, String sort, String type) {
+    public Page<List<UserResponse>> getAllUser(int page, int size, String sort, String type) {
 
         Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
 
-        return userRepository.findAll(pageable).map(userMapper::mapUserToUserResponse);
+        List<UserResponse> userResponseList = userRepository.findAll()
+                .stream()
+                .map(userMapper::mapUserToUserResponse)
+                .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()),userResponseList.size());
+
+        Page<UserResponse> pageResponse = new PageImpl<>(userResponseList.subList(start,end),pageable,userResponseList.size());
+
+        List<UserResponse> content = pageResponse.getContent();
+
+        return new PageImpl<>(List.of(content),pageable,pageResponse.getTotalElements());
+
     }
 
     // getUserById() *******
     public ResponseMessage<UserResponse> getUserById(Long userId) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE)));
+       User user = util.isUserExist(userId);
 
         UserResponse userResponse = userMapper.mapUserToUserResponse(user);
 
@@ -100,17 +157,68 @@ public class UserService {
     }
 
     // UsersCreateForAdminOrEmployee() ****
-    public ResponseMessage<UserResponse> usersCreateForAdminOrEmployee(UserRequest userRequest) {
+    public ResponseMessage<UserResponse> usersCreateForAdminOrEmployee(HttpServletRequest request,
+                                                                       UserRequest userRequest) {
 
-        // kayıtlı mı kontrolü
+        User user = util.getAttributeUser(request);
+        Set<UserRole> roles = user.getUserRole();
+        Set<String> requestRoles = userRequest.getUserRole();
+        Set<UserRole> userRole = new HashSet<>();
+
+        UserRole admin = userRoleService.getUserRole(RoleType.ADMIN);
+        UserRole employee = userRoleService.getUserRole(RoleType.EMPLOYEE);
+        UserRole member = userRoleService.getUserRole(RoleType.MEMBER);
+
         uniquePropertyValidator.checkDuplicate(userRequest.getEmail(), userRequest.getPhone());
 
-        User user = userMapper.mapUserRequestToUser(userRequest);
-        user.setUserRole(userRoleService.getUserRole(RoleType.MEMBER));
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+
+        if (roles.stream()
+                .anyMatch(t-> t.equals(admin))) {
+
+            for (String role : requestRoles) {
+
+                if (admin.getRoleName().equalsIgnoreCase(role)) {
+
+                    userRole.add(admin);
+
+
+                } else if (employee.getRoleName().equalsIgnoreCase(role)) {
+
+                    userRole.add(employee);
+
+
+                } else if (member.getRoleName().equalsIgnoreCase(role)) {
+
+                    userRole.add(member);
+
+                } else {
+
+                    throw new ResourceNotFoundException(ErrorMessages.NOT_ROLE_TYPE_VALID_MESSAGE);
+                }
+
+
+            }
+
+
+        }else  {
+
+            userRole.add(member);
+            userRequest.setBuiltIn(Boolean.FALSE);
+        }
+
+
+        User newUser = userMapper.mapUserRequestToUser(userRequest);
+
+        newUser.setUserRole(userRole);
+
+        newUser.setCreateDate(LocalDateTime.now());
+
+        newUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+
+        User savedUser = userRepository.save(newUser);
 
         return ResponseMessage.<UserResponse>builder()
-                .object(userMapper.mapUserToUserResponse((userRepository.save(user))))
+                .object(userMapper.mapUserToUserResponse(savedUser))
                 .message(SuccessMessages.USER_SAVE_MESSAGE)
                 .build();
 
@@ -153,4 +261,12 @@ public class UserService {
 
         return SuccessMessages.USER_DELETE_MESSAGE;
     }
+
+    // Not: Write For Runner ***************************************
+    public long countAllAdmins(){
+        return userRepository.countAdmin(RoleType.ADMIN);
+    }
+
+
+
 }

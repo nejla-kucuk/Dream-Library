@@ -22,9 +22,8 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    // Signin()********
-    // http://localhost:8080/auth/signin  + POST + JSON
-    @PostMapping("/signin")
+    // Not: signin()  ********************************
+    @PostMapping("/signin") // http://localhost:8080/signin  + POST + JSON
     public ResponseEntity<AuthResponse> authenticateUser(@RequestBody @Valid SigninRequest signinRequest){
 
         return authenticationService.authenticateUser(signinRequest);
