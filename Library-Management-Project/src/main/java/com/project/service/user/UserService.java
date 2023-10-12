@@ -173,7 +173,7 @@ public class UserService {
 
 
         if (roles.stream()
-                .anyMatch(t-> t.equals(admin))) {
+                .anyMatch(t-> t.equals(admin) || t.equals(employee) )) {
 
             for (String role : requestRoles) {
 
@@ -197,13 +197,22 @@ public class UserService {
                 }
 
 
+                if (employee.getRoleName().equalsIgnoreCase(role)){
+                    userRole.add(member);
+                    userRequest.setBuiltIn(Boolean.FALSE);
+
+                } else {
+
+                    throw new ResourceNotFoundException(ErrorMessages.NOT_ROLE_TYPE_VALID_MESSAGE);
+                }
+
+
             }
 
 
         }else  {
 
-            userRole.add(member);
-            userRequest.setBuiltIn(Boolean.FALSE);
+            throw new ResourceNotFoundException(ErrorMessages. NOT_PERMITTED_USER_MESSAGE);
         }
 
 
