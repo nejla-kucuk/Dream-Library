@@ -63,15 +63,13 @@ public class LibraryManagementProjectApplication implements CommandLineRunner {
 			roles.add("Admin");
 			UserRequest adminRequest = new UserRequest();
 			adminRequest.setEmail("nkucukk@github.com");
-			adminRequest.setPassword("123456");
+			adminRequest.setPassword("123456789");
 			adminRequest.setFirstName("Nejla");
 			adminRequest.setLastName("Küçük");
 			adminRequest.setPhone("530-000-0000");
 			adminRequest.setBirthDate(LocalDate.of(1995,2,2));
 			adminRequest.setAddress("Bursa-Bursa-Bursa");
 			adminRequest.setUserRole(roles);
-
-
 
 			userService.saveAdmin(adminRequest);
 

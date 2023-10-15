@@ -1,7 +1,6 @@
 package com.project.service.user;
 
 
-import com.project.entity.business.Loan;
 import com.project.entity.enums.RoleType;
 import com.project.entity.user.User;
 import com.project.entity.user.UserRole;
@@ -10,15 +9,12 @@ import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mapper.UserMapper;
 import com.project.payload.message.ErrorMessages;
 import com.project.payload.message.SuccessMessages;
-import com.project.payload.request.authentication.SigninRequest;
+import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.UserRequest;
-import com.project.payload.response.authentication.AuthResponse;
-import com.project.payload.response.business.LoanResponse;
+import com.project.payload.request.user.UserRequestWithoutUserRole;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.UserResponse;
 import com.project.repository.user.UserRepository;
-import com.project.security.jwt.JwtUtils;
-import com.project.security.sevice.UserDetailsImpl;
 import com.project.service.helper.PageableHelper;
 import com.project.service.utils.Util;
 import com.project.service.validation.UniquePropertyValidator;
@@ -27,25 +23,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -92,7 +76,7 @@ public class UserService {
     }
 
     // Register()********
-    public ResponseMessage<UserResponse> registerUser(UserRequest userRequest) {
+    public ResponseMessage<UserResponse> registerUser(UserRequestWithoutUserRole userRequest) {
 
         uniquePropertyValidator.checkDuplicate(userRequest.getEmail(), userRequest.getPhone());
 
@@ -102,6 +86,7 @@ public class UserService {
         userRoleSet.add(userRoleService.getUserRole(RoleType.MEMBER));
 
         user.setUserRole(userRoleSet);
+
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
         user.setBuiltIn(Boolean.FALSE);
@@ -119,6 +104,11 @@ public class UserService {
     public ResponseMessage<UserResponse> getUser(HttpServletRequest request) {
 
         User user = util.getAttributeUser(request);
+
+        if (user == null){
+
+            throw new ResourceNotFoundException(ErrorMessages.NOT_FOUND_USER_MESSAGE);
+        }
 
         return ResponseMessage.<UserResponse>builder()
                 .httpStatus(HttpStatus.OK)
@@ -164,6 +154,8 @@ public class UserService {
         return new PageImpl<>(List.of(content),pageable,pageResponse.getTotalElements());
 
     }
+
+
 
     // getUserById() *******
     public ResponseMessage<UserResponse> getUserById(Long userId) {

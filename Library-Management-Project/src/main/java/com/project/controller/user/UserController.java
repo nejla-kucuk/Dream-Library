@@ -1,6 +1,8 @@
 package com.project.controller.user;
 
+import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.UserRequest;
+import com.project.payload.request.user.UserRequestWithoutUserRole;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.UserResponse;
 import com.project.service.user.UserService;
@@ -29,21 +31,21 @@ public class UserController {
 
 
     // Register()********
-    // http://localhost:8080/user/register
+    // http://localhost:8080/register  --Kütüphaneye ilk kayıt olma işlemi
     @PostMapping("/register")
-    public ResponseEntity<ResponseMessage<UserResponse>> registerUser(@RequestBody @Valid UserRequest userRequest){
+    public ResponseEntity<ResponseMessage<UserResponse>> registerUser(@RequestBody @Valid UserRequestWithoutUserRole userRequest){
 
         return ResponseEntity.ok(userService.registerUser(userRequest));
 
     }
 
-    // User()********
+    // User()******** ??
     // http://localhost:8080/user
     @PostMapping("/user")
     @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE','MEMBER')")
     public ResponseMessage<UserResponse> getUser(HttpServletRequest httpServletRequest){
 
-        return userService.getUser(httpServletRequest);
+        return userService.getUser(httpServletRequest );
 
     }
 
@@ -64,7 +66,7 @@ public class UserController {
 //
   //  }
 
-    // getAllUsers()********
+    // getAllUsers()******** ??
     // http://localhost:8080/users?page=1&size=10&sort=createDate&type=desc
     @GetMapping("/users")
     @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
@@ -91,6 +93,7 @@ public class UserController {
 
 
     // UsersCreateForAdminOrEmployee() ****
+    // http://localhost:8080/users
     @PostMapping("/users")
     @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
     public ResponseEntity<ResponseMessage<UserResponse>> usersCreateForAdminOrEmployee(HttpServletRequest httpServletRequest,
@@ -103,22 +106,24 @@ public class UserController {
 
 
     // UpdateForAdminOrEmployee() *****
+    // http://localhost:8080/users/2
     @PutMapping("/users/{userId}")
     @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
     public ResponseMessage<UserResponse>  updateById(@RequestBody @Valid UserRequest userRequest,
-                                                                  @PathVariable Long userId,
-                                                                  HttpServletRequest request) {
+                                                     @PathVariable Long userId,
+                                                     HttpServletRequest request) {
         return userService.updateById(userRequest,request,userId);
     }
 
 
 
     // Not: DeleteUser() **********
+    // http://localhost:8080/users/2
     @DeleteMapping("/users/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseMessage<UserResponse> deleteUserById(@PathVariable Long userId) {
+    public ResponseMessage<UserResponse> deleteUserById(@PathVariable Long id) {
 
-        return userService.deleteUserById(userId);
+        return userService.deleteUserById(id);
     }
 
 

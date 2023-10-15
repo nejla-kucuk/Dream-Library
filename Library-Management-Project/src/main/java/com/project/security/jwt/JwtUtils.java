@@ -1,6 +1,6 @@
 package com.project.security.jwt;
 
-import com.project.security.sevice.UserDetailsImpl;
+import com.project.security.service.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +25,7 @@ public class JwtUtils {
     public String generateJwtToken(Authentication authentication){
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
         return generateJwtTokenFromEmail(userDetails.getEmail());
     }
 

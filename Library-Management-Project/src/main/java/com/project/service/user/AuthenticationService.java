@@ -10,10 +10,9 @@ import com.project.payload.response.authentication.AuthResponse;
 import com.project.payload.response.user.UserResponse;
 import com.project.repository.user.UserRepository;
 import com.project.security.jwt.JwtUtils;
-import com.project.security.sevice.UserDetailsImpl;
+import com.project.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,8 +20,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
@@ -67,10 +64,10 @@ public class AuthenticationService {
 
         AuthResponse.AuthResponseBuilder authResponse = AuthResponse.builder();
         authResponse.email(userDetails.getEmail());
-        authResponse.firstName(userDetails.getFirstName());
-        authResponse.lastName(userDetails.getLastName());
         authResponse.token(token.substring(7));
         authResponse.roles(roles); //TODO: null veya empty
+
+
 
         return ResponseEntity.ok(authResponse.build());
 

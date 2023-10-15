@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/auth")
+//@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -29,27 +29,4 @@ public class AuthenticationController {
         return authenticationService.authenticateUser(signinRequest);
     }
 
-    // FindByEmail()*********
-    // http://localhost:8080/auth/user   + GET
-    @GetMapping("/user")
-    @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE','MEMBER')")
-    public ResponseEntity<UserResponse> findByUsername(HttpServletRequest request){
-
-        String email = (String) request.getAttribute("email");
-        UserResponse userResponse =  authenticationService.findByEmail(email);
-        return ResponseEntity.ok(userResponse);
-    }
-
-    // Not: updatePassword() ************************************
-    // http://localhost:8080/auth/updatePassword
-    @PatchMapping("/updatePassword")
-    @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE','MEMBER')")
-    public ResponseEntity<String> updatePassword(@RequestBody @Valid UpdatePasswordRequest updatePasswordRequest,
-                                                 HttpServletRequest request){
-
-        authenticationService.updatePassword(updatePasswordRequest, request);
-        String response = SuccessMessages.PASSWORD_CHANGED_RESPONSE_MESSAGE;
-        return  ResponseEntity.ok(response);
-
-    }
 }

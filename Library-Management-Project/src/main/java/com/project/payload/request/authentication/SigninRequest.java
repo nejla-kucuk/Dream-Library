@@ -21,6 +21,6 @@ public class SigninRequest {
 
     @NotNull(message = "Please, enter your password!")
     @Size(min = 8, max = 60,message = "Your password should be at least 8 chars or maximum 60 characters!")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\\\d)(?=.*[-+_!@#$%^&*., ?]).+$")
+    //@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\\\d)(?=.*[-+_!@#$%^&*., ?]).+$")
     private String password;
 }

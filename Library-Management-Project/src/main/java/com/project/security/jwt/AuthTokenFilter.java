@@ -1,6 +1,6 @@
 package com.project.security.jwt;
 
-import com.project.security.sevice.UserDetailsServiceImpl;
+import com.project.security.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthTokenFilter.class);
 
@@ -29,18 +29,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private  JwtUtils jwtUtils;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private  UserDetailsServiceImpl userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt =  parseJwt(request);
             if(jwt != null && jwtUtils.validateJwtToken(jwt)){
                 String email = jwtUtils.getEmailFromJwtToken(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-                request.setAttribute("email", email);
+                request.setAttribute("username", email); // getAtttribute("username")
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,null,
                         userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -1,4 +1,4 @@
-package com.project.security.sevice;
+package com.project.security.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.entity.user.UserRole;
