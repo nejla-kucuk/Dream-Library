@@ -336,13 +336,20 @@ public class UserService {
 
 
     // Not: DeleteUser() **********
-    public String deleteUserById(Long userId, HttpServletRequest request) {
+    public ResponseMessage<UserResponse> deleteUserById(Long userId ) {
 
-        util.isUserExist(userId);
+        // DB'de bu kişili Id var mı?
+        User user = util.isUserExist(userId);
 
         userRepository.deleteById(userId);
 
-        return SuccessMessages.USER_DELETE_MESSAGE;
+        return ResponseMessage.<UserResponse>builder()
+                .message(SuccessMessages.USER_DELETE_MESSAGE)
+                .object(userMapper.mapUserToUserResponse(user))
+                .httpStatus(HttpStatus.OK)
+                .build();
+
+
     }
 
     // Not: Write For Runner ***************************************

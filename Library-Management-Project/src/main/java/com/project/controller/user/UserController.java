@@ -1,18 +1,13 @@
 package com.project.controller.user;
 
-import com.project.payload.request.authentication.SigninRequest;
 import com.project.payload.request.user.UserRequest;
-import com.project.payload.response.authentication.AuthResponse;
-import com.project.payload.response.business.LoanResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.UserResponse;
 import com.project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -112,12 +107,11 @@ public class UserController {
 
 
     // Not: DeleteUser() **********
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/users/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<String> deleteUserById(@PathVariable Long userId,
-                                                 HttpServletRequest httpServletRequest) {
+    public ResponseMessage<UserResponse> deleteUserById(@PathVariable Long userId) {
 
-        return ResponseEntity.ok(userService.deleteUserById(userId, httpServletRequest));
+        return userService.deleteUserById(userId);
     }
 
 
