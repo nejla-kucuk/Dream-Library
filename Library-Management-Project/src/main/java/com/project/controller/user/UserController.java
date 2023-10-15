@@ -101,12 +101,15 @@ public class UserController {
 
 
     // UpdateForAdminOrEmployee() *****
-    @PutMapping("/update/{userId}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')") // Bu kısımda ikiye mi bölünecek? Admin için ayrı Employee için ayrı?????
-    public ResponseMessage<UserResponse> updateForAdminOrEmployee(@RequestBody @Valid UserRequest userRequest,
-                                                                     @PathVariable Long userId) {
-        return userService.updateForAdminOrEmployee(userRequest, userId);
+    @PutMapping("/users/{userId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
+    public ResponseMessage<UserResponse>  updateById(@RequestBody @Valid UserRequest userRequest,
+                                                                  @PathVariable Long userId,
+                                                                  HttpServletRequest request) {
+        return userService.updateById(userRequest,request,userId);
     }
+
+
 
     // Not: DeleteUser() **********
     @DeleteMapping("/delete/{id}")

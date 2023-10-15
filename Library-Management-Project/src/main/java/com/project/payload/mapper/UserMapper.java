@@ -44,12 +44,10 @@ public class UserMapper {
         return User.builder()
                 .id(userId)
                 .firstName(userRequest.getFirstName())
-                .firstName(userRequest.getFirstName())
                 .lastName(userRequest.getLastName())
                 .address(userRequest.getAddress())
                 .phone(userRequest.getPhone())
                 .birthDate(userRequest.getBirthDate())
-                .createDate(userRequest.getCreateDate())
                 .build();
     }
 

@@ -162,6 +162,7 @@ public class UserService {
 
         User user = util.getAttributeUser(request);
         Set<UserRole> roles = user.getUserRole();
+
         Set<String> requestRoles = userRequest.getUserRole();
         Set<UserRole> userRole = new HashSet<>();
 
@@ -170,6 +171,13 @@ public class UserService {
         UserRole member = userRoleService.getUserRole(RoleType.MEMBER);
 
         uniquePropertyValidator.checkDuplicate(userRequest.getEmail(), userRequest.getPhone());
+
+        if (requestRoles.size()>1 || requestRoles.stream().noneMatch(role->role.equalsIgnoreCase(member.getRoleName()))){
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_USER_MESSAGE);
+        }else {
+           userRole.add(member);
+            userRequest.setBuiltIn(Boolean.FALSE);
+        }
 
 
         if (roles.stream()
@@ -206,7 +214,6 @@ public class UserService {
                     throw new ResourceNotFoundException(ErrorMessages.NOT_ROLE_TYPE_VALID_MESSAGE);
                 }
 
-
             }
 
 
@@ -235,21 +242,87 @@ public class UserService {
 
 
     // UpdateForAdminOrEmployee() ****
-    public ResponseMessage<UserResponse> updateForAdminOrEmployee(UserRequest userRequest, Long userId) {
+    public ResponseMessage<UserResponse> updateById(UserRequest userRequest,
+                                                    HttpServletRequest request,
+                                                    Long userId) {
+        // Giriş yapan kullanıcı kim?
+        User user = util.getAttributeUser(request);
 
-        User user = util.isUserExist(userId);
+        // Giriş yapan kullanıcının rollerini atadık.
+        Set<UserRole> roles = user.getUserRole();
 
-        util.isBuiltIn(user);
+        // Update etmek istediği kullanıcının ID var mı?
+        User user2 = util.isUserExist(userId);
 
-        uniquePropertyValidator.checkUniqueProperties(user,userRequest);
+        // Update etmek istenilen kişinin rolü nedir?
+        Set<String> requestUserRole = userRequest.getUserRole();
 
-        User updatedUser = userMapper.mapUserRequestToUpdatedUser(userRequest, userId);
 
-        updatedUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        UserRole admin = userRoleService.getUserRole(RoleType.ADMIN);
+        UserRole employee = userRoleService.getUserRole(RoleType.EMPLOYEE);
+        UserRole member = userRoleService.getUserRole(RoleType.MEMBER);
 
-        updatedUser.setUserRole(user.getUserRole());
+        // update edilen user role setlemesi için kullanıldı.
+        Set<UserRole> userRoleSet = new HashSet<>();
 
-        User savedUser = userRepository.save(updatedUser);
+        if (roles.stream()
+                .anyMatch(t-> t.equals(admin))){
+
+            if ( !(requestUserRole.equals(admin.getRoleName()))||
+                  (user2.getUserRole().equals(employee.getRoleName())) ||
+                  (user2.getUserRole().equals(member.getRoleName()))){
+
+                throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+            }
+
+        } else if (roles.stream()
+                .anyMatch(t-> t.equals(employee))) {
+
+            if ( !user2.getUserRole().equals(member.getRoleName())){
+
+                throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+            }
+
+        } else {
+
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_USER_MESSAGE);
+        }
+
+
+        // Update edilen fieldler unique mi?
+        uniquePropertyValidator.checkDuplicate(userRequest.getEmail(), userRequest.getPhone());
+
+        // DTO --> POJO dönüşümü
+        User uptadedUser = userMapper.mapUserRequestToUpdatedUser(userRequest,userId);
+
+        // Password encode edilmesi
+        uptadedUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+
+        // UserRole setleme
+       if(uptadedUser.getUserRole().equals(admin)){
+
+           userRoleSet.add(admin);
+
+           // Built-in kontrolü
+           uptadedUser.setBuiltIn(Boolean.TRUE);
+
+       } else if (uptadedUser.getUserRole().equals(employee)){
+
+           userRoleSet.add(employee);
+
+       } else {
+
+           userRoleSet.add(member);
+
+       }
+
+       // Built-in kontrolü
+       uptadedUser.setBuiltIn(Boolean.FALSE);
+
+       // User Role setleme işlemi
+       uptadedUser.setUserRole(userRoleSet);
+
+       User savedUser = userRepository.save(uptadedUser);
 
         return ResponseMessage.<UserResponse>builder()
                 .message(SuccessMessages.USER_UPDATE_MESSAGE)
@@ -257,8 +330,9 @@ public class UserService {
                 .object(userMapper.mapUserToUserResponse(savedUser))
                 .build();
 
-
     }
+
+
 
 
     // Not: DeleteUser() **********
@@ -275,7 +349,5 @@ public class UserService {
     public long countAllAdmins(){
         return userRepository.countAdmin(RoleType.ADMIN);
     }
-
-
 
 }
