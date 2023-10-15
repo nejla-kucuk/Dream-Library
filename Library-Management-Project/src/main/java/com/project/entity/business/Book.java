@@ -9,8 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Entity
 
@@ -38,19 +37,12 @@ public class Book {
     @Nullable
     private Integer pageCount;
 
-    @NotNull(message = "Author Id must not be empty!")
-    private Long authorId;
-
-    @NotNull(message = "Publisher Id must not be empty!")
-    private Long publisherId;
 
     @Nullable
     @Min(value = 1000, message = "Publish date must be a valid year (e.g., 1000 or later)!")
     @Max(value = 9999, message = "Publish date must be a valid year (e.g., 9999 or earlier)!")
     private int publishDate;
 
-    @NotNull(message = "Category Id must not be empty!")
-    private Long categoryId;
 
     @Nullable
     private File image;
@@ -82,16 +74,14 @@ public class Book {
    // @JsonIgnore
    // private List<Loan> loans = new ArrayList<>();
 
-    @ManyToOne(cascade = CascadeType.PERSIST) //ManyToMany olabilir
-    @JoinColumn(name = "authorId")
+    @ManyToOne // ManyToMany
+    @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
-    @ManyToOne(cascade = CascadeType.PERSIST) //ManyToMay olabilir
-    @JoinColumn(name = "publisherId")
+    @ManyToOne //ManyToMay olabilir
     private Publisher publisher;
 
-    @ManyToOne(cascade = CascadeType.PERSIST) //ManyToMay olabilir
-    @JoinColumn(name = "categoryId")
+    @ManyToOne //ManyToMay olabilir
     private Category category;
 
 

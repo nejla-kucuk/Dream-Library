@@ -1,6 +1,7 @@
 package com.project.security.sevice;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.entity.user.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -33,19 +35,16 @@ public class UserDetailsImpl implements UserDetails {
                            String lastName,
                            String password,
                            String email,
-                           Set<String> roles) {
+                           Set<UserRole> roles) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
-
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        for (String role : roles) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role));
-        }
-
-        this.authorities = grantedAuthorities;
+        this.authorities = roles.stream()
+                .map(userRole -> userRole.getRoleType().name())
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
     }
 
     @Override

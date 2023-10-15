@@ -12,6 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByPhone(String phone);
 
-    @Query(value = "SELECT COUNT(u) FROM User u WHERE u.userRole.roleType = ?1")
+    @Query("SELECT COUNT (u) FROM User u INNER JOIN u.userRole r WHERE r.roleType =?1")
     long countAdmin(RoleType roleType);
 }

@@ -13,9 +13,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -68,7 +65,7 @@ public class User {
 
     @NotNull(message = "Please, enter your password!")
     @Size(min = 8, max = 60,message = "Your password should be at least 8 chars or maximum 60 characters!")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\\\d)(?=.*[-+_!@#$%^&*., ?]).+$")
+    //@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\\\d)(?=.*[-+_!@#$%^&*., ?]).+$")
     private String password;
 
     @NotNull(message = "Create Date must not be empty!")
@@ -84,7 +81,7 @@ public class User {
 
 
     // Relations
-    @OneToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // JSON formatta bu bilgi görülmez.
     private Set<UserRole> userRole;
 

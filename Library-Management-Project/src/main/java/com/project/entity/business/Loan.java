@@ -24,11 +24,6 @@ public class Loan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "User ID must not be empty!")
-    private Long userId;
-
-    @NotNull(message = "Book ID must not be empty!")
-    private Long bookId;
 
     @NotNull(message = "Loan Date must not be empty!")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mmZ", timezone = "US")
@@ -49,13 +44,11 @@ public class Loan {
 
 
     //Realitions
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.PERSIST) // OneToOne olabilir mi?
-    @JoinColumn(name = "bookId")
+    @ManyToOne // OneToOne olabilir mi?
     private Book book;
 
 }

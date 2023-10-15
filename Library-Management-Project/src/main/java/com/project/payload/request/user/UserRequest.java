@@ -1,6 +1,6 @@
 package com.project.payload.request.user;
 
-import com.project.entity.user.UserRole;
+
 import com.project.payload.request.abstracts.BaseUserRequest;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

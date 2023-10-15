@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 

@@ -27,6 +27,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebSecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
+
     private final AuthEntryPointJwt unauthorizedHandler;
 
     @Bean

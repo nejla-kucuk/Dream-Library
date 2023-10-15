@@ -68,7 +68,7 @@ public class UserService {
     private final Util util;
 
     // saveAdmin() ****
-    public ResponseEntity<String> saveAdmin(UserRequest userRequest) {
+    public String saveAdmin (UserRequest userRequest) {
 
         Set<UserRole> userRole = new HashSet<>();
 
@@ -88,7 +88,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok(SuccessMessages.USER_SAVE_MESSAGE);
+        return SuccessMessages.USER_SAVE_MESSAGE;
     }
 
     // Register()********
@@ -197,9 +197,10 @@ public class UserService {
 
         if (requestRoles.size()>1 || requestRoles.stream().noneMatch(role->role.equalsIgnoreCase(member.getRoleName()))){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_USER_MESSAGE);
+
         }else {
            userRole.add(member);
-            userRequest.setBuiltIn(Boolean.FALSE);
+
         }
 
 
@@ -230,7 +231,7 @@ public class UserService {
 
                 if (employee.getRoleName().equalsIgnoreCase(role)){
                     userRole.add(member);
-                    userRequest.setBuiltIn(Boolean.FALSE);
+
 
                 } else {
 
@@ -288,20 +289,33 @@ public class UserService {
         // update edilen user role setlemesi için kullanıldı.
         Set<UserRole> userRoleSet = new HashSet<>();
 
-        if (roles.stream()
-                .anyMatch(t-> t.equals(admin))){
+        // DTO --> POJO dönüşümü
+        User uptadedUser = userMapper.mapUserRequestToUpdatedUser(userRequest,userId);
 
-            if ( !(requestUserRole.equals(admin.getRoleName()))||
-                  (user2.getUserRole().equals(employee.getRoleName())) ||
-                  (user2.getUserRole().equals(member.getRoleName()))){
+        if (roles.stream().anyMatch(role->role.equals(admin))) {
 
-                throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+            for (String role : requestUserRole) { // Admin - ADmin - ADMiN farketmicek
+
+                if (role.equalsIgnoreCase(admin.getRoleName())) {
+                    userRoleSet.add(admin);
+
+                } else if (role.equalsIgnoreCase(employee.getRoleName())) {
+                    userRoleSet.add(employee);
+
+                } else if (role.equalsIgnoreCase(member.getRoleName())) {
+                    userRoleSet.add(member);
+
+                } else {
+                    throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_PERMITTED_USER_MESSAGE, role)); // yeniden bak
+                }
             }
 
         } else if (roles.stream()
                 .anyMatch(t-> t.equals(employee))) {
 
-            if ( !user2.getUserRole().equals(member.getRoleName())){
+
+            if ( user2.getUserRole().stream().anyMatch(userRole -> userRole.getRoleType().equals(RoleType.ADMIN) ||
+                    userRole.getRoleType().equals(RoleType.EMPLOYEE))){
 
                 throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
             }
@@ -315,8 +329,6 @@ public class UserService {
         // Update edilen fieldler unique mi?
         uniquePropertyValidator.checkDuplicate(userRequest.getEmail(), userRequest.getPhone());
 
-        // DTO --> POJO dönüşümü
-        User uptadedUser = userMapper.mapUserRequestToUpdatedUser(userRequest,userId);
 
         // Password encode edilmesi
         uptadedUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
@@ -326,8 +338,6 @@ public class UserService {
 
            userRoleSet.add(admin);
 
-           // Built-in kontrolü
-           uptadedUser.setBuiltIn(Boolean.TRUE);
 
        } else if (uptadedUser.getUserRole().equals(employee)){
 

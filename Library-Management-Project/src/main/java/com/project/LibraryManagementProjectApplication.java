@@ -11,6 +11,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootApplication
 public class LibraryManagementProjectApplication implements CommandLineRunner {
@@ -45,32 +47,35 @@ public class LibraryManagementProjectApplication implements CommandLineRunner {
 
 			UserRole employee = new UserRole();
 			employee.setRoleType(RoleType.EMPLOYEE);
-			employee.setRoleName("Teacher");
+			employee.setRoleName("Employee");
 			userRoleRepository.save(employee);
 
 			UserRole member = new UserRole();
 			member.setRoleType(RoleType.MEMBER);
-			member.setRoleName("Student");
+			member.setRoleName("Member");
 			userRoleRepository.save(member);
 
 		}
 
 		if(userService.countAllAdmins() == 0){
 
+			Set<String> roles = new HashSet<>();
+			roles.add("Admin");
 			UserRequest adminRequest = new UserRequest();
 			adminRequest.setEmail("nkucukk@github.com");
-			adminRequest.setPassword("nKucuk123_");
+			adminRequest.setPassword("123456");
 			adminRequest.setFirstName("Nejla");
 			adminRequest.setLastName("Küçük");
-			adminRequest.setPhone("0530-000-00-00");
+			adminRequest.setPhone("530-000-0000");
 			adminRequest.setBirthDate(LocalDate.of(1995,2,2));
-			adminRequest.setAddress("Bursa");
+			adminRequest.setAddress("Bursa-Bursa-Bursa");
+			adminRequest.setUserRole(roles);
+
+
 
 			userService.saveAdmin(adminRequest);
 
 		}
-
-
 
 
 	}

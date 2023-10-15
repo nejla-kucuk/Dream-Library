@@ -18,14 +18,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user =  userRepository.findByEmailEquals(email);
+        User user =  userRepository.findByEmailEquals(username);
 
-        Set<String> roles = user.getUserRole()
-                .stream()
-                .map(t->t.getRoleType().getName())
-                .collect(Collectors.toSet());
 
         if (user != null) {
             return new UserDetailsImpl(
@@ -34,11 +30,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     user.getLastName(),
                     user.getPassword(),
                     user.getEmail(),
-                    roles
+                    user.getUserRole()
             );
         }
 
-        throw new UsernameNotFoundException("User : " + email + " not found");
+        throw new UsernameNotFoundException("User : " + username + " not found");
     }
 
 }
