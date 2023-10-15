@@ -67,6 +67,29 @@ public class UserService {
 
     private final Util util;
 
+    // saveAdmin() ****
+    public ResponseEntity<String> saveAdmin(UserRequest userRequest) {
+
+        Set<UserRole> userRole = new HashSet<>();
+
+        UserRole admin = userRoleService.getUserRole(RoleType.ADMIN);
+
+        userRole.add(admin);
+
+        User user = userMapper.mapUserRequestToUser(userRequest);
+
+        user.setBuiltIn(Boolean.TRUE);
+
+        user.setUserRole(userRole);
+
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+
+        user.setCreateDate(LocalDateTime.now());
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok(SuccessMessages.USER_SAVE_MESSAGE);
+    }
 
     // Register()********
     public ResponseMessage<UserResponse> registerUser(UserRequest userRequest) {
@@ -356,5 +379,6 @@ public class UserService {
     public long countAllAdmins(){
         return userRepository.countAdmin(RoleType.ADMIN);
     }
+
 
 }

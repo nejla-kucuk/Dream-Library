@@ -21,6 +21,13 @@ public class UserController {
 
     private final UserService userService;
 
+    // saveAdmin() ****
+    public ResponseEntity<String> saveAdmin(@RequestBody @Valid UserRequest userRequest) {
+
+        return ResponseEntity.ok(userService.saveAdmin(userRequest));
+
+    }
+
     // Register()********
     // http://localhost:8080/user/register
     @PostMapping("/register")

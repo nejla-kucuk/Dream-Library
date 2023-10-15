@@ -66,7 +66,7 @@ public class LibraryManagementProjectApplication implements CommandLineRunner {
 			adminRequest.setBirthDate(LocalDate.of(1995,2,2));
 			adminRequest.setAddress("Bursa");
 
-			userService.registerUser(adminRequest);
+			userService.saveAdmin(adminRequest);
 
 		}
 
