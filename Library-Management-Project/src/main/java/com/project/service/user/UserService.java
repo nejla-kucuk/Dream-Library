@@ -9,7 +9,6 @@ import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mapper.UserMapper;
 import com.project.payload.message.ErrorMessages;
 import com.project.payload.message.SuccessMessages;
-import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.UserRequest;
 import com.project.payload.request.user.UserRequestWithoutUserRole;
 import com.project.payload.response.business.ResponseMessage;
@@ -30,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -136,7 +134,7 @@ public class UserService {
     // getAllUsers()********
     public Page<List<UserResponse>> getAllUser(int page, int size, String sort, String type) {
 
-        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+        Pageable pageable = pageableHelper.getPageableWithProperties(page,size);
 
         List<UserResponse> userResponseList = userRepository.findAll()
                 .stream()
@@ -147,9 +145,11 @@ public class UserService {
 
         int end = Math.min((start + pageable.getPageSize()), userResponseList.size());
 
-        List<UserResponse> content = userResponseList.subList(start, end);
+        Page<UserResponse> pageResponse = new PageImpl<>(userResponseList.subList(start, end), pageable, userResponseList.size());
 
-        return new PageImpl<>(List.of(content), pageable, userResponseList.size());
+        List<UserResponse> content = pageResponse.getContent();
+
+        return new PageImpl<>(List.of(content),pageable,pageResponse.getTotalElements());
     }
 
 
@@ -185,17 +185,9 @@ public class UserService {
 
         uniquePropertyValidator.checkDuplicate(userRequest.getEmail(), userRequest.getPhone());
 
-        if (requestRoles.size()>1 || requestRoles.stream().noneMatch(role->role.equalsIgnoreCase(member.getRoleName()))){
-            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_USER_MESSAGE);
-
-        }else {
-           userRole.add(member);
-
-        }
-
 
         if (roles.stream()
-                .anyMatch(t-> t.equals(admin) || t.equals(employee) )) {
+                .anyMatch(t -> t.equals(admin))) {
 
             for (String role : requestRoles) {
 
@@ -218,22 +210,19 @@ public class UserService {
                     throw new ResourceNotFoundException(ErrorMessages.NOT_ROLE_TYPE_VALID_MESSAGE);
                 }
 
-
-                if (employee.getRoleName().equalsIgnoreCase(role)){
-                    userRole.add(member);
-
-
-                } else {
-
-                    throw new ResourceNotFoundException(ErrorMessages.NOT_ROLE_TYPE_VALID_MESSAGE);
-                }
-
             }
 
 
-        }else  {
+        } else if (user.getUserRole().stream().anyMatch(role -> role.equals(employee))) {
 
-            throw new ResourceNotFoundException(ErrorMessages. NOT_PERMITTED_USER_MESSAGE);
+            // Kullanıcının 'employee' rolü varsa, sadece 'member' rolünü setle
+            if (requestRoles.size() == 1 && requestRoles.stream().anyMatch(role -> role.equalsIgnoreCase(member.getRoleName()))) {
+                userRole.add(member);
+
+            } else {
+                throw new BadRequestException(ErrorMessages.NOT_PERMITTED_USER_MESSAGE);
+            }
+
         }
 
 
@@ -279,6 +268,9 @@ public class UserService {
         // update edilen user role setlemesi için kullanıldı.
         Set<UserRole> userRoleSet = new HashSet<>();
 
+        // Update edilen fieldler unique mi?
+        uniquePropertyValidator.checkUniqueProperties(user2, userRequest);
+
         // DTO --> POJO dönüşümü
         User uptadedUser = userMapper.mapUserRequestToUpdatedUser(userRequest,userId);
 
@@ -300,50 +292,37 @@ public class UserService {
                 }
             }
 
-        } else if (roles.stream()
-                .anyMatch(t-> t.equals(employee))) {
+        } else if (roles.stream().anyMatch(role->role.equals(employee))){
 
-
-            if ( user2.getUserRole().stream().anyMatch(userRole -> userRole.getRoleType().equals(RoleType.ADMIN) ||
+            if(user2.getUserRole().stream().anyMatch(userRole -> userRole.getRoleType().equals(RoleType.ADMIN) ||
                     userRole.getRoleType().equals(RoleType.EMPLOYEE))){
 
                 throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+
+            }else{
+
+                userRoleSet.add(member);
             }
+        }else {
 
-        } else {
-
-            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_USER_MESSAGE);
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
         }
 
 
-        // Update edilen fieldler unique mi?
-        uniquePropertyValidator.checkDuplicate(userRequest.getEmail(), userRequest.getPhone());
+
 
 
         // Password encode edilmesi
         uptadedUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-
-        // UserRole setleme
-       if(uptadedUser.getUserRole().equals(admin)){
-
-           userRoleSet.add(admin);
-
-
-       } else if (uptadedUser.getUserRole().equals(employee)){
-
-           userRoleSet.add(employee);
-
-       } else {
-
-           userRoleSet.add(member);
-
-       }
 
        // Built-in kontrolü
        uptadedUser.setBuiltIn(Boolean.FALSE);
 
        // User Role setleme işlemi
        uptadedUser.setUserRole(userRoleSet);
+
+       //
+       uptadedUser.setCreateDate(LocalDateTime.now());
 
        User savedUser = userRepository.save(uptadedUser);
 

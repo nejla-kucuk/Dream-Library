@@ -12,6 +12,12 @@ public class UserMapper {
 
     public UserResponse mapUserToUserResponse(User user){
 
+        if (user == null) {
+            // User null ise gerekli işlemleri yapabilirsiniz.
+            // Örneğin, bir hata mesajı döndürebilir veya bir exception fırlatabilirsiniz.
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
         return UserResponse.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())
@@ -55,6 +61,7 @@ public class UserMapper {
                 .lastName(userRequest.getLastName())
                 .address(userRequest.getAddress())
                 .phone(userRequest.getPhone())
+                .email(userRequest.getEmail())
                 .birthDate(userRequest.getBirthDate())
                 .build();
     }

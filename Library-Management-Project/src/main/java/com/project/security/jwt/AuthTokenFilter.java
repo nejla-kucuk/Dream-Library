@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthTokenFilter.class);
 
@@ -38,7 +38,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             if(jwt != null && jwtUtils.validateJwtToken(jwt)){
                 String email = jwtUtils.getEmailFromJwtToken(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-                request.setAttribute("username", email); // getAtttribute("username")
+                request.setAttribute("email", email);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,null,
                         userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
