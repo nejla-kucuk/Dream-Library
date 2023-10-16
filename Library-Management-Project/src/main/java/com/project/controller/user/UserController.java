@@ -45,7 +45,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE','MEMBER')")
     public ResponseMessage<UserResponse> getUser(HttpServletRequest httpServletRequest){
 
-        return userService.getUser(httpServletRequest );
+        return userService.getUser(httpServletRequest);
 
     }
 

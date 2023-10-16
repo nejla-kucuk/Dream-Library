@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -105,14 +106,12 @@ public class UserService {
 
         User user = util.getAttributeUser(request);
 
-        if (user == null){
 
-            throw new ResourceNotFoundException(ErrorMessages.NOT_FOUND_USER_MESSAGE);
-        }
+        UserResponse userResponse = userMapper.mapUserToUserResponse(user);
 
         return ResponseMessage.<UserResponse>builder()
                 .httpStatus(HttpStatus.OK)
-                .object(userMapper.mapUserToUserResponse(user))
+                .object(userResponse)
                 .build();
     }
 
@@ -137,7 +136,7 @@ public class UserService {
     // getAllUsers()********
     public Page<List<UserResponse>> getAllUser(int page, int size, String sort, String type) {
 
-        Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
 
         List<UserResponse> userResponseList = userRepository.findAll()
                 .stream()
@@ -145,15 +144,14 @@ public class UserService {
                 .collect(Collectors.toList());
 
         int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()),userResponseList.size());
 
-        Page<UserResponse> pageResponse = new PageImpl<>(userResponseList.subList(start,end),pageable,userResponseList.size());
+        int end = Math.min((start + pageable.getPageSize()), userResponseList.size());
 
-        List<UserResponse> content = pageResponse.getContent();
+        List<UserResponse> content = userResponseList.subList(start, end);
 
-        return new PageImpl<>(List.of(content),pageable,pageResponse.getTotalElements());
-
+        return new PageImpl<>(List.of(content), pageable, userResponseList.size());
     }
+
 
 
 

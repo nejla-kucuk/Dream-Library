@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -37,6 +38,8 @@ public class Util {
 
         return userRepository.findByEmailEquals(email);
     }
+
+
 
 
 
