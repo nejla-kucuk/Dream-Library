@@ -2,7 +2,9 @@ package com.project.payload.message;
 
 public class SuccessMessages {
 
-   private SuccessMessages(){}
+
+
+    private SuccessMessages(){}
 
     public static final String PASSWORD_CHANGED_RESPONSE_MESSAGE = "Password successfully changed :)";
 
@@ -13,4 +15,7 @@ public class SuccessMessages {
     public static final String USER_UPDATE_MESSAGE = "User is updated successfully :)";
 
     public static final String USER_DELETE_MESSAGE = "User is deleted successfully :)";
+
+
+    public static final String BOOK_SAVED_MESSAGE = "Book is saved successfully :)" ;
 }

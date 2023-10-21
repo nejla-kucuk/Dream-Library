@@ -1,13 +1,12 @@
 package com.project.payload.request.business;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.*;
 import java.io.File;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,9 +14,6 @@ import java.io.File;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class BookRequest {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @NotNull(message = "Book name must not be empty!")
     @Size(min=2 , max =20 , message= "Book name should be at least 2 characters!")
@@ -32,6 +28,14 @@ public class BookRequest {
     @Nullable
     private Integer pageCount;
 
+    @NotNull(message = "Book authorId must not be empty!")
+    private Long authorId;
+
+    @NotNull(message = "Book publisherId must not be empty!")
+    private Long publisherId;
+
+    @NotNull(message = "Book categoryId must not be empty!")
+    private Long categoryId;
 
     @Nullable
     @Min(value = 1000, message = "Publish date must be a valid year (e.g., 1000 or later)!")
@@ -46,20 +50,22 @@ public class BookRequest {
     private boolean loanable = true;
 
     @NotNull(message = "Shelf code must not be empty!")
-    @Pattern(regexp = "^[A-Z]{2}-\\d{3}$", message = "Shelf code must be in the format 'AA-999'!")
+    @Pattern(regexp = "^[A-Z]{2}-\\d{3}$", message = "Shelf code must be in the format 'WF-214'!")
     @Size(min = 6, max = 6, message = "Shelf code must be exactly 6 characters long!")
     private String shelfCode;
 
     @NotNull
-    private boolean active = true;
+    private boolean active;
 
     @NotNull
-    private boolean featured  = false;
+    private boolean featured;
 
-    //@NotNull(message = "Create Date must not be empty!")
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mmZ", timezone = "US")
-    //private LocalDateTime createDate;
+    @NotNull(message = "Create Date must not be empty!")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mmZ", timezone = "US")
+    private LocalDateTime createDate;
 
-    //@NotNull
-    //private boolean builtIn = false;
+    @NotNull
+    private boolean builtIn;
+
+
 }

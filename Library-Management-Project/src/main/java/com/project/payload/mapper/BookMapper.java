@@ -1,13 +1,14 @@
 package com.project.payload.mapper;
 
 import com.project.entity.business.Book;
+import com.project.payload.request.business.BookRequest;
 import com.project.payload.response.business.BookResponse;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BookMapper {
 
-    //  Pojo --> Response DTO
+    //  POJO --> Response DTO
     public BookResponse mapBookToBookResponse(Book book){
 
         return BookResponse.builder()
@@ -21,4 +22,17 @@ public class BookMapper {
     }
 
 
+    // bookRequest DTO --> POJO
+    public Book mapBookRequestToBook(BookRequest bookRequest) {
+
+        return Book.builder()
+                .bookName(bookRequest.getBookName())
+                .isbn(bookRequest.getIsbn())
+                .pageCount(bookRequest.getPageCount())
+                .publishDate(bookRequest.getPublishDate())
+                .image(bookRequest.getImage())
+                .shelfCode(bookRequest.getShelfCode())
+                .featured(bookRequest.isFeatured())
+                .build();
+    }
 }

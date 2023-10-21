@@ -8,6 +8,7 @@ import com.project.service.business.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -34,12 +35,22 @@ public class BookController {
 
     // getBooksById()*****
     // http://localhost:8080/books/5
-   @GetMapping("books/{bookId}")
+    @GetMapping("books/{bookId}")
     public ResponseMessage<BookResponse> getBooksById(@PathVariable Long bookId){
 
         return bookService.getBooksById(bookId);
 
     }
+
+    // createBook()****
+    // http://localhost:8080/books
+    @PostMapping("books")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseMessage<BookResponse> createBook(@RequestBody @Valid BookRequest bookRequest){
+
+        return bookService.createBook(bookRequest);
+    }
+
 
 
 }
