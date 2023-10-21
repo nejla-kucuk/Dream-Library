@@ -1,9 +1,12 @@
 package com.project.service.utils;
 
+import com.project.entity.business.Book;
 import com.project.entity.user.User;
 import com.project.exception.BadRequestException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.message.ErrorMessages;
+import com.project.payload.request.business.BookRequest;
+import com.project.repository.business.BookRepository;
 import com.project.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,6 +19,9 @@ import java.util.Optional;
 public class Util {
 
     private final UserRepository userRepository;
+
+    private  final BookRepository bookRepository;
+
     public User isUserExist(Long userId){
 
         return userRepository.findById(userId).orElseThrow(()->
@@ -37,6 +43,14 @@ public class Util {
         String email = (String) request.getAttribute("email");
 
         return userRepository.findByEmailEquals(email);
+    }
+
+
+    // For use Books Endpoints
+    public Book isBooksExistById(Long bookId){
+
+        return bookRepository.findById(bookId).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_BOOKS_MESSAGE,bookId)));
     }
 
 

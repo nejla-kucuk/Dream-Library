@@ -158,7 +158,7 @@ public class UserService {
     // getUserById() *******
     public ResponseMessage<UserResponse> getUserById(Long userId) {
 
-       User user = util.isUserExist(userId);
+        User user = util.isUserExist(userId);
 
         UserResponse userResponse = userMapper.mapUserToUserResponse(user);
 

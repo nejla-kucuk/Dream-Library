@@ -30,7 +30,6 @@ public class UniquePropertyValidator {
     }
 
     // Unique mi kontrolü?
-
     public void checkUniqueProperties(User user, BaseUserRequest userRequest){
 
         String updatedEmail = "";
