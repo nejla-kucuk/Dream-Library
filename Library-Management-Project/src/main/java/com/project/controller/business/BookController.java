@@ -23,14 +23,14 @@ public class BookController {
     // getBooks()**** ---for search books---
     // http://localhost:8080/books?q=sefiller&cat=4&author=34&publisher=42&page=1&size=10&sort=name&type=asc
     @GetMapping("books")
-    public Page<List<BookResponse>> getBooks(
+    public Page<List<BookResponse>> getAllBooks(
             @RequestBody @Valid BookRequest bookRequest,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
             @RequestParam(value = "sort", defaultValue = "bookName") String sort,
             @RequestParam(value = "type", defaultValue = "asc") String type){
 
-        return bookService.getBooks(bookRequest,page,size,sort,type);
+        return bookService.getAllBooks(bookRequest,page,size,sort,type);
     }
 
     // getBooksById()*****
@@ -50,6 +50,29 @@ public class BookController {
 
         return bookService.createBook(bookRequest);
     }
+
+    // updateBook()***
+    // http://localhost:8080/books/5
+    @PutMapping("books/{bookId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseMessage<BookResponse> updateBookBookById(@PathVariable Long bookId,
+                                                            @RequestBody BookRequest bookRequest){
+
+        return bookService.updateBookBookById(bookId,bookRequest);
+
+    }
+
+    // deleteBook()***
+    // http://localhost:8080/books/5
+    @DeleteMapping("books/{bookId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseMessage<BookResponse> deleteBookById(@PathVariable Long bookId){
+
+        return bookService.deleteBookById(bookId);
+
+    }
+
+
 
 
 

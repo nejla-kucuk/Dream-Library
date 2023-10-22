@@ -30,7 +30,7 @@ public class BookService {
     private final BookMapper bookMapper;
 
     // getBooks()**** ??
-    public Page<List<BookResponse>> getBooks(BookRequest bookRequest,
+    public Page<List<BookResponse>> getAllBooks(BookRequest bookRequest,
                                              int page,
                                              int size,
                                              String sort,
@@ -79,5 +79,50 @@ public class BookService {
                 .object(bookResponse)
                 .build();
 
+    }
+
+    // updateBook()***
+    public ResponseMessage<BookResponse> updateBookBookById(Long bookId,
+                                                    BookRequest bookRequest) {
+
+        // BookId kontrolü
+        util.isBooksExistById(bookId);
+
+        // Request DTO --> POJO dönüşümü
+        Book book = bookMapper.mapBookRequestToBook(bookRequest);
+
+        // TODO: authorId, publisherId, categoryId'i response gönder.
+
+        // Update edilen bilgileri DB'ye kaydet.
+        Book savedBook = bookRepository.save(book);
+
+        // POJO --> Response DTO dönüşümü
+        BookResponse bookResponse = bookMapper.mapBookToBookResponse(savedBook);
+
+        return ResponseMessage.<BookResponse>builder()
+                .message(SuccessMessages.BOOK_UPDATE_MESSAGE)
+                .httpStatus(HttpStatus.OK)
+                .object(bookResponse)
+                .build();
+
+    }
+
+    // deleteBook()***
+    public ResponseMessage<BookResponse> deleteBookById(Long bookId) {
+
+        //bookId kontorülü
+        Book book = util.isBooksExistById(bookId);
+
+        //TODO: Eğer kitap ödünç alınacaklar listesinde ise hata mesajı gönder. Değilse sil.
+
+        bookRepository.delete(book);
+
+        BookResponse deletedBook = bookMapper.mapBookToBookResponse(book);
+
+        return ResponseMessage.<BookResponse>builder()
+                .message(SuccessMessages.BOOK_DELETE_MESSAGE)
+                .httpStatus(HttpStatus.OK)
+                .object(deletedBook)
+                .build();
     }
 }

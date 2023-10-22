@@ -42,7 +42,6 @@ public class BookRequest {
     @Max(value = 9999, message = "Publish date must be a valid year (e.g., 9999 or earlier)!")
     private int publishDate;
 
-
     @Nullable
     private File image;
 

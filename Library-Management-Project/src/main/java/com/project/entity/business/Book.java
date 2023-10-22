@@ -37,12 +37,10 @@ public class Book {
     @Nullable
     private Integer pageCount;
 
-
     @Nullable
     @Min(value = 1000, message = "Publish date must be a valid year (e.g., 1000 or later)!")
     @Max(value = 9999, message = "Publish date must be a valid year (e.g., 9999 or earlier)!")
     private int publishDate;
-
 
     @Nullable
     private File image;
