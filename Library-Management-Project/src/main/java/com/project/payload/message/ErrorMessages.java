@@ -22,4 +22,7 @@ public class ErrorMessages {
     public static final String NOT_FOUND_BOOKS_MESSAGE = "Error: Book not found with ID %s! " ;
 
     public static final String NOT_FOUND_PUBLISHER_MESSAGE = "Error: Publisher not found with ID %s! ";
+
+    public static final String NOT_DELETED_PUBLISHER_BY_ID = "Error: Publisher has related books. Deletion not allowed!" ;
+
 }

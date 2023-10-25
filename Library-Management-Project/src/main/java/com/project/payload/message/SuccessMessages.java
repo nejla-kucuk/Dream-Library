@@ -26,5 +26,6 @@ public class SuccessMessages {
     public static final String PUBLISHER_SAVED_MESSAGE = "Publisher is saved successfully :)";
 
     public static final String PUBLISHER_UPDATE_MESSAGE = "Publisher is updated successfully :)";
+    public static final String PUBLISHER_DELETE_MESSAGE = "Publisher is deleted successfully :)" ;
 
 }
