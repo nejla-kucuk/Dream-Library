@@ -67,10 +67,10 @@ public class Book {
     private boolean builtIn = false;
 
 
-    // Realitions
-   // @OneToMany(mappedBy = "book",cascade = CascadeType.REMOVE)
-   // @JsonIgnore
-   // private List<Loan> loans = new ArrayList<>();
+    // --------Realitions---------
+    // @OneToMany(mappedBy = "book",cascade = CascadeType.REMOVE)
+    // @JsonIgnore
+    // private List<Loan> loans = new ArrayList<>();
 
     @ManyToOne // ManyToMany
     @JoinColumn(name = "author_id", nullable = false)

@@ -21,4 +21,10 @@ public class SuccessMessages {
 
     public static final String BOOK_DELETE_MESSAGE = "Book is deleted successfully :)" ;
 
+
+
+    public static final String PUBLISHER_SAVED_MESSAGE = "Publisher is saved successfully :)";
+
+    public static final String PUBLISHER_UPDATE_MESSAGE = "Publisher is updated successfully :)";
+
 }

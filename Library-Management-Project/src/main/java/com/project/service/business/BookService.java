@@ -83,7 +83,7 @@ public class BookService {
 
     // updateBook()***
     public ResponseMessage<BookResponse> updateBookBookById(Long bookId,
-                                                    BookRequest bookRequest) {
+                                                            BookRequest bookRequest) {
 
         // BookId kontrolü
         util.isBooksExistById(bookId);
@@ -91,7 +91,7 @@ public class BookService {
         // Request DTO --> POJO dönüşümü
         Book book = bookMapper.mapBookRequestToBook(bookRequest);
 
-        // TODO: authorId, publisherId, categoryId'i response gönder.
+        //TODO: authorId, publisherId, categoryId'i response gönder.
 
         // Update edilen bilgileri DB'ye kaydet.
         Book savedBook = bookRepository.save(book);
