@@ -2,6 +2,7 @@ package com.project.service.business;
 
 import com.project.entity.business.Category;
 import com.project.payload.mapper.CategoryMapper;
+import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.PublisherResponse;
 import com.project.payload.response.business.ResponseMessage;
@@ -54,6 +55,21 @@ public class CategoryService {
         Category category = util.isCategoryExistById(categoryId);
 
         CategoryResponse response = categoryMapper.mapCategoryToCategoryResponse(category);
+
+        return ResponseMessage.<CategoryResponse>builder()
+                .httpStatus(HttpStatus.OK)
+                .object(response)
+                .build();
+    }
+
+    // createCategory()******
+    public ResponseMessage<CategoryResponse> createCategory(CategoryRequest categoryRequest) {
+
+        Category category = categoryMapper.mapCategoryRequestToCategory(categoryRequest);
+
+        Category savedCategory = categoryRepository.save(category);
+
+        CategoryResponse response = categoryMapper.mapCategoryToCategoryResponse(savedCategory);
 
         return ResponseMessage.<CategoryResponse>builder()
                 .httpStatus(HttpStatus.OK)
