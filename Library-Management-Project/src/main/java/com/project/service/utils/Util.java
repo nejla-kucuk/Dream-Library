@@ -1,6 +1,7 @@
 package com.project.service.utils;
 
 import com.project.entity.business.Book;
+import com.project.entity.business.Category;
 import com.project.entity.business.Publisher;
 import com.project.entity.user.User;
 import com.project.exception.BadRequestException;
@@ -8,6 +9,7 @@ import com.project.exception.ResourceNotFoundException;
 import com.project.payload.message.ErrorMessages;
 import com.project.payload.request.business.BookRequest;
 import com.project.repository.business.BookRepository;
+import com.project.repository.business.CategoryRepository;
 import com.project.repository.business.PublisherRepository;
 import com.project.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +20,15 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class Util {
+public class Util{
 
     private final UserRepository userRepository;
 
     private  final BookRepository bookRepository;
 
     private final PublisherRepository publisherRepository;
+
+    private final CategoryRepository categoryRepository;
 
     public User isUserExist(Long userId){
 
@@ -64,6 +68,16 @@ public class Util {
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_PUBLISHER_MESSAGE,publisherId)));
 
     }
+
+    // For use Category Endpoints
+    public Category isCategoryExistById(Long categoryId){
+
+        return categoryRepository.findById(categoryId).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_CATEGORY_MESSAGE,categoryId)));
+
+    }
+
+
 
 
 

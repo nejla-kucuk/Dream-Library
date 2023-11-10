@@ -61,6 +61,7 @@ public class PublisherService {
     public ResponseMessage<PublisherResponse> getPublisherById(Long publisherId) {
 
         Publisher publisher = util.isPublisherExistById(publisherId);
+
         PublisherResponse response = publisherMapper.mapPublisherToPublisherResponse(publisher);
 
         return ResponseMessage.<PublisherResponse>builder()
