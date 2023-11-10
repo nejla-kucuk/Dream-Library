@@ -49,4 +49,23 @@ public class CategoryController {
         return categoryService.createCategory(categoryRequest);
     }
 
+    // updateCategoryById()******
+    // http://localhost:8080/categories/4
+    @PutMapping("categories{categoryId}")
+    @PreAuthorize("(hasAuthority('ADMIN')")
+    public ResponseMessage<CategoryResponse> updateCategoryById(@PathVariable Long categoryId,
+                                                                @RequestBody @Valid CategoryRequest categoryRequest){
+
+        return categoryService.updateCategoryById(categoryId,categoryRequest);
+    }
+
+    // deleteCategoryById()******
+    // http://localhost:8080/categories/4
+    @DeleteMapping("categories{categoryId}")
+    @PreAuthorize("(hasAuthority('ADMIN')")
+    public ResponseMessage<CategoryResponse> deleteCategoryById(@PathVariable Long categoryId){
+
+        return categoryService.deleteCategoryById(categoryId);
+    }
+
 }

@@ -1,7 +1,9 @@
 package com.project.service.business;
 
 import com.project.entity.business.Category;
+import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mapper.CategoryMapper;
+import com.project.payload.message.ErrorMessages;
 import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.PublisherResponse;
@@ -76,4 +78,29 @@ public class CategoryService {
                 .object(response)
                 .build();
     }
+
+    // updateCategoryById()******
+    public ResponseMessage<CategoryResponse> updateCategoryById(Long categoryId,
+                                                                CategoryRequest categoryRequest) {
+
+        util.isCategoryExistById(categoryId);
+
+        Category category = categoryMapper.mapCategoryRequestToCategory(categoryRequest);
+
+        Category updatedCategory = categoryRepository.save(category);
+
+        CategoryResponse response = categoryMapper.mapCategoryToCategoryResponse(updatedCategory);
+
+        return ResponseMessage.<CategoryResponse>builder()
+                .httpStatus(HttpStatus.OK)
+                .object(response)
+                .build();
+    }
+
+    public ResponseMessage<CategoryResponse> deleteCategoryById(Long categoryId) {
+
+        util.isCategoryExistById(categoryId);
+    }
+
+
 }
