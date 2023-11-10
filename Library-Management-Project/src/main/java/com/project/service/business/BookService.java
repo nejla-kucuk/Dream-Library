@@ -30,6 +30,7 @@ public class BookService {
     private final BookMapper bookMapper;
 
     // getBooks()**** ??
+    /*
     public Page<List<BookResponse>> getAllBooks(BookRequest bookRequest,
                                              int page,
                                              int size,
@@ -39,6 +40,7 @@ public class BookService {
 
         //TODO: Bu kısmı tamamla.
     }
+    */
 
 
     // getBooksById()*****

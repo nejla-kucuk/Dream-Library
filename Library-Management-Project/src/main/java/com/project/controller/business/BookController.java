@@ -18,6 +18,7 @@ public class BookController {
 
     private final BookService bookService;
 
+    /*
     // getBooks()**** ---for search books---
     // http://localhost:8080/books?q=sefiller&cat=4&author=34&publisher=42&page=1&size=10&sort=name&type=asc
     @GetMapping("books")
@@ -30,6 +31,7 @@ public class BookController {
 
         return bookService.getAllBooks(bookRequest,page,size,sort,type);
     }
+    */
 
     // getBooksById()*****
     // http://localhost:8080/books/5
