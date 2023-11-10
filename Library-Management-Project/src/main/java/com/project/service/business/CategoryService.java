@@ -1,9 +1,12 @@
 package com.project.service.business;
 
+import com.project.entity.business.Book;
 import com.project.entity.business.Category;
+import com.project.exception.BadRequestException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mapper.CategoryMapper;
 import com.project.payload.message.ErrorMessages;
+import com.project.payload.message.SuccessMessages;
 import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
 import com.project.payload.response.business.PublisherResponse;
@@ -32,6 +35,7 @@ public class CategoryService {
     private final CategoryMapper categoryMapper;
 
     private final Util util;
+
 
     //getAllCategories()*******
     public Page<List<CategoryResponse>> getAllCategories(int page, int size, String sort, String type) {
@@ -74,6 +78,7 @@ public class CategoryService {
         CategoryResponse response = categoryMapper.mapCategoryToCategoryResponse(savedCategory);
 
         return ResponseMessage.<CategoryResponse>builder()
+                .message(SuccessMessages.CATEGORY_SAVED_MESSAGE)
                 .httpStatus(HttpStatus.OK)
                 .object(response)
                 .build();
@@ -92,6 +97,7 @@ public class CategoryService {
         CategoryResponse response = categoryMapper.mapCategoryToCategoryResponse(updatedCategory);
 
         return ResponseMessage.<CategoryResponse>builder()
+                .message(SuccessMessages.CATEGORY_UPDATE_MESSAGE)
                 .httpStatus(HttpStatus.OK)
                 .object(response)
                 .build();
@@ -99,7 +105,25 @@ public class CategoryService {
 
     public ResponseMessage<CategoryResponse> deleteCategoryById(Long categoryId) {
 
-        util.isCategoryExistById(categoryId);
+        Category category = util.isCategoryExistById(categoryId);
+
+        // Category'e ait kitabın olup olamadığı kontrol edilir.
+        List<Book> books = util.getBooksByCategoryId(categoryId);
+
+        if(!books.isEmpty()){
+            throw new BadRequestException(ErrorMessages.NOT_DELETED_CATEGORY_BY_ID);
+        }
+
+        CategoryResponse response = categoryMapper.mapCategoryToCategoryResponse(category);
+
+        categoryRepository.delete(category);
+
+        return ResponseMessage.<CategoryResponse>builder()
+                .message(SuccessMessages.CATEGORY_DELETE_MESSAGE)
+                .httpStatus(HttpStatus.OK)
+                .object(response)
+                .build();
+
     }
 
 

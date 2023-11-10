@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -74,6 +75,21 @@ public class Util{
 
         return categoryRepository.findById(categoryId).orElseThrow(()->
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_CATEGORY_MESSAGE,categoryId)));
+
+    }
+
+
+    // Helper Method For Publisher
+    public List<Book> getBooksByPublisherId(Long publisherId) {
+
+        return bookRepository.findByPublisherId(publisherId);
+
+    }
+
+    // Helper Method For Category
+    public List<Book> getBooksByCategoryId(Long categoryId) {
+
+        return bookRepository.findByCategoryId(categoryId);
 
     }
 

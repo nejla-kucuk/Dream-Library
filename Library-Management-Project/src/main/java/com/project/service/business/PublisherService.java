@@ -2,6 +2,7 @@ package com.project.service.business;
 
 import com.project.entity.business.Book;
 import com.project.entity.business.Publisher;
+import com.project.exception.BadRequestException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mapper.PublisherMapper;
 import com.project.payload.message.ErrorMessages;
@@ -36,7 +37,6 @@ public class PublisherService {
 
     private final Util util;
 
-    private final Book book;
 
     // getAllPublisher()******
     public Page<List<PublisherResponse>> getAllPublisher(int page, int size, String sort, String type) {
@@ -115,17 +115,22 @@ public class PublisherService {
     // deletePublisherById()*****
     public ResponseMessage<PublisherResponse> deletePublisherById(Long publisherId) {
 
-        //id kontrolü
+        // id kontrolü
         Publisher publisher = util.isPublisherExistById(publisherId);
 
         // Yayıncının kitaplarının olup olmadığı
-        hasRelatedBooks(publisherId);
+        List<Book> books =  util.getBooksByPublisherId(publisherId);
+
+        if (!books.isEmpty()){
+            throw new BadRequestException(ErrorMessages.NOT_DELETED_PUBLISHER_BY_ID);
+        }
+
+        // POJO --> DTO Dönüşümü
+        PublisherResponse response = publisherMapper.mapPublisherToPublisherResponse(publisher);
 
         // Silme işlemi
         publisherRepository.deleteById(publisherId);
 
-        // POJO --> DTO Dönüşümü
-        PublisherResponse response = publisherMapper.mapPublisherToPublisherResponse(publisher);
 
         return ResponseMessage.<PublisherResponse>builder()
                 .message(SuccessMessages.PUBLISHER_DELETE_MESSAGE)
@@ -135,16 +140,6 @@ public class PublisherService {
 
     }
 
-
-    // Helper Method
-    private boolean hasRelatedBooks(Long publisherId) {
-
-        if(book.getPublisher().getId().equals(publisherId)){
-            throw new ResourceNotFoundException(ErrorMessages.NOT_DELETED_PUBLISHER_BY_ID);
-        }
-
-        return true;
-    }
 
 
 
