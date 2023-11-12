@@ -15,7 +15,7 @@ import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.UserResponse;
 import com.project.repository.user.UserRepository;
 import com.project.service.helper.PageableHelper;
-import com.project.service.utils.Util;
+import com.project.service.utils.UserUtil;
 import com.project.service.validation.UniquePropertyValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -48,7 +48,7 @@ public class UserService {
 
     private final PageableHelper pageableHelper;
 
-    private final Util util;
+    private final UserUtil util;
 
     // saveAdmin() ****
     public String saveAdmin (UserRequest userRequest) {

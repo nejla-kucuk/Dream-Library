@@ -11,8 +11,9 @@ public class AuthorMapper {
     public AuthorResponse mapAuthorToAuthorResponse(Author author){
 
         return AuthorResponse.builder()
-
-
-
+                .id(author.getId())
+                .authorName(author.getAuthorName())
+                .builtIn(author.isBuiltIn())
+                .build();
     }
 }

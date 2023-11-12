@@ -1,11 +1,14 @@
 package com.project.controller.business;
 
 import com.project.payload.response.business.AuthorResponse;
+import com.project.payload.response.business.PublisherResponse;
+import com.project.payload.response.business.ResponseMessage;
 import com.project.service.business.AuthorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +30,16 @@ public class AuthorController {
                                                    @RequestParam(value = "type", defaultValue = "asc") String type){
 
         return authorService.getAllAuthor(page,size,sort,type);
+
+    }
+
+    // getAuthorById()******
+    // http://localhost:8080/authors/4
+    @GetMapping("/pauthors/{authorId}")
+    @PreAuthorize("!(hasAuthority('ADMIN') and hasAuthority('EMPLOYEE') and hasAuthority('MEMBER'))")
+    public ResponseMessage<AuthorResponse> getAuthorById(@PathVariable Long authorId){
+
+        return authorService.getAuthorById(authorId);
 
     }
 

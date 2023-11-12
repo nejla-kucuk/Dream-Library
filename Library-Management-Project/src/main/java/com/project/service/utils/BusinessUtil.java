@@ -3,56 +3,25 @@ package com.project.service.utils;
 import com.project.entity.business.Book;
 import com.project.entity.business.Category;
 import com.project.entity.business.Publisher;
-import com.project.entity.user.User;
-import com.project.exception.BadRequestException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.message.ErrorMessages;
-import com.project.payload.request.business.BookRequest;
 import com.project.repository.business.BookRepository;
 import com.project.repository.business.CategoryRepository;
 import com.project.repository.business.PublisherRepository;
-import com.project.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class Util{
-
-    private final UserRepository userRepository;
+public class BusinessUtil {
 
     private  final BookRepository bookRepository;
 
     private final PublisherRepository publisherRepository;
 
     private final CategoryRepository categoryRepository;
-
-    public User isUserExist(Long userId){
-
-        return userRepository.findById(userId).orElseThrow(()->
-                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE, userId)));
-    }
-
-    public boolean isBuiltIn(User user){
-
-        if(Boolean.TRUE.equals(user.isBuiltIn())) {
-            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
-        }
-
-        return false;
-
-    }
-
-    public User getAttributeUser(HttpServletRequest request){
-
-        String email = (String) request.getAttribute("email");
-
-        return userRepository.findByEmailEquals(email);
-    }
 
 
     // For use Books Endpoints
@@ -92,10 +61,5 @@ public class Util{
         return bookRepository.findByCategoryId(categoryId);
 
     }
-
-
-
-
-
 
 }

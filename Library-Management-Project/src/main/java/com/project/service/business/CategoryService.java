@@ -3,17 +3,15 @@ package com.project.service.business;
 import com.project.entity.business.Book;
 import com.project.entity.business.Category;
 import com.project.exception.BadRequestException;
-import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mapper.CategoryMapper;
 import com.project.payload.message.ErrorMessages;
 import com.project.payload.message.SuccessMessages;
 import com.project.payload.request.business.CategoryRequest;
 import com.project.payload.response.business.CategoryResponse;
-import com.project.payload.response.business.PublisherResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.CategoryRepository;
 import com.project.service.helper.PageableHelper;
-import com.project.service.utils.Util;
+import com.project.service.utils.BusinessUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,7 +32,7 @@ public class CategoryService {
 
     private final CategoryMapper categoryMapper;
 
-    private final Util util;
+    private final BusinessUtil util;
 
 
     //getAllCategories()*******

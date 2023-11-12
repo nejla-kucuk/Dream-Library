@@ -1,23 +1,21 @@
 package com.project.service.business;
 
 import com.project.entity.business.Book;
-import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mapper.BookMapper;
-import com.project.payload.message.ErrorMessages;
 import com.project.payload.message.SuccessMessages;
 import com.project.payload.request.business.BookRequest;
 import com.project.payload.response.business.BookResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.BookRepository;
 import com.project.service.helper.PageableHelper;
-import com.project.service.utils.Util;
+import com.project.service.utils.BusinessUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +25,7 @@ public class BookService {
 
     private final PageableHelper pageableHelper;
 
-    private final Util util;
+    private final BusinessUtil util;
 
     private final BookMapper bookMapper;
 

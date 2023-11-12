@@ -17,6 +17,8 @@ import lombok.experimental.SuperBuilder;
 public class AuthorResponse {
 
     private Long id;
+
     private String authorName;
+
     private boolean builtIn = false;
 }

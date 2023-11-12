@@ -2,9 +2,10 @@ package com.project.service.business;
 
 import com.project.payload.mapper.AuthorMapper;
 import com.project.payload.response.business.AuthorResponse;
-import com.project.payload.response.business.PublisherResponse;
+import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.AuthorRepository;
 import com.project.service.helper.PageableHelper;
+import com.project.service.utils.BusinessUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,6 +25,8 @@ public class AuthorService {
 
     private final AuthorMapper authorMapper;
 
+    private final BusinessUtil util;
+
 
     public Page<List<AuthorResponse>> getAllAuthor(int page, int size, String sort, String type) {
 
@@ -40,5 +43,11 @@ public class AuthorService {
         List<AuthorResponse> content = authorResponseList.subList(start, end);
 
         return new PageImpl<>(List.of(content), pageable, authorResponseList.size());
+    }
+
+
+    // getAuthorById()******
+    public ResponseMessage<AuthorResponse> getAuthorById(Long authorId) {
+
     }
 }
