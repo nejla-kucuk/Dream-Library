@@ -1,5 +1,6 @@
 package com.project.controller.business;
 
+import com.project.payload.request.business.AuthorRequest;
 import com.project.payload.response.business.AuthorResponse;
 import com.project.payload.response.business.PublisherResponse;
 import com.project.payload.response.business.ResponseMessage;
@@ -7,11 +8,9 @@ import com.project.service.business.AuthorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,13 +34,23 @@ public class AuthorController {
 
     // getAuthorById()******
     // http://localhost:8080/authors/4
-    @GetMapping("/pauthors/{authorId}")
+    @GetMapping("/authors/{authorId}")
     @PreAuthorize("!(hasAuthority('ADMIN') and hasAuthority('EMPLOYEE') and hasAuthority('MEMBER'))")
     public ResponseMessage<AuthorResponse> getAuthorById(@PathVariable Long authorId){
 
         return authorService.getAuthorById(authorId);
 
     }
+
+    // createAuthor()********
+    // http://localhost:8080/authors/4
+    @PostMapping("/authors")
+    @PreAuthorize("(hasAuthority('ADMIN'))")
+    public ResponseMessage<AuthorResponse> createAuthor(@RequestBody @Valid AuthorRequest authorRequest){
+
+        return authorService.createAuthor(authorRequest);
+    }
+
 
 
 }
