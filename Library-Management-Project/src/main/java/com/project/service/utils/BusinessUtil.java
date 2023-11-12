@@ -60,8 +60,6 @@ public class BusinessUtil {
     }
 
 
-
-
     // Helper Method For Publisher
     public List<Book> getBooksByPublisherId(Long publisherId) {
 
@@ -76,4 +74,9 @@ public class BusinessUtil {
 
     }
 
+    // Helper Method For Category
+    public List<Book> getBooksByAuthorId(Long authorId) {
+
+        return bookRepository.findByAuthorId(authorId);
+    }
 }

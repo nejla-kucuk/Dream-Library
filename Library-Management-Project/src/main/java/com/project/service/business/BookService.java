@@ -60,7 +60,11 @@ public class BookService {
 
         Book book = bookMapper.mapBookRequestToBook(bookRequest);
 
-        //TODO: authorId, publisherId, categoryId'i setle.
+        book.getAuthor().setId(bookRequest.getAuthorId());
+
+        book.getPublisher().setId(bookRequest.getPublisherId());
+
+        book.getCategory().setId(bookRequest.getCategoryId());
 
         book.setActive(Boolean.TRUE);
 
@@ -91,8 +95,6 @@ public class BookService {
 
         // Request DTO --> POJO dönüşümü
         Book book = bookMapper.mapBookRequestToBook(bookRequest);
-
-        //TODO: authorId, publisherId, categoryId'i response gönder.
 
         // Update edilen bilgileri DB'ye kaydet.
         Book savedBook = bookRepository.save(book);

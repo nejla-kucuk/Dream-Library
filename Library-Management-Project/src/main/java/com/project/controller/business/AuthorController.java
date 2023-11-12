@@ -63,6 +63,15 @@ public class AuthorController {
     }
 
 
+    // deleteAuthorById()********
+    // http://localhost:8080/authors/4
+    @DeleteMapping("/authors/{authorId}")
+    @PreAuthorize("(hasAuthority('ADMIN'))")
+    public ResponseMessage<AuthorResponse> deleteAuthorById(@RequestParam Long authorId){
+
+        return authorService.deleteAuthorById(authorId);
+    }
+
 
 
 }

@@ -1,11 +1,13 @@
 package com.project.service.business;
 
 import com.project.entity.business.Author;
+import com.project.entity.business.Book;
+import com.project.exception.BadRequestException;
 import com.project.payload.mapper.AuthorMapper;
+import com.project.payload.message.ErrorMessages;
 import com.project.payload.message.SuccessMessages;
 import com.project.payload.request.business.AuthorRequest;
 import com.project.payload.response.business.AuthorResponse;
-import com.project.payload.response.business.PublisherResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.AuthorRepository;
 import com.project.service.helper.PageableHelper;
@@ -101,6 +103,33 @@ public class AuthorService {
                 .object(response)
                 .build();
 
+
+    }
+
+    // deleteAuthorById()********
+    public ResponseMessage<AuthorResponse> deleteAuthorById(Long authorId) {
+
+        Author author = util.isAuthorExistById(authorId);
+
+        // Yayıncının kitaplarının olup olmadığı
+        List<Book> books =  util.getBooksByAuthorId(authorId);
+
+        if (!books.isEmpty()){
+            throw new BadRequestException(ErrorMessages.NOT_DELETED_AUTHOR_BY_ID);
+        }
+
+        // POJO --> DTO Dönüşümü
+        AuthorResponse response = authorMapper.mapAuthorToAuthorResponse(author);
+
+        // Silme işlemi
+        authorRepository.deleteById(authorId);
+
+
+        return ResponseMessage.<AuthorResponse>builder()
+                .message(SuccessMessages.AUTHOR_DELETE_MESSAGE)
+                .httpStatus(HttpStatus.OK)
+                .object(response)
+                .build();
 
     }
 }

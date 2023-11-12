@@ -18,6 +18,9 @@ public class BookMapper {
                 .publishDate(book.getPublishDate())
                 .pageCount(book.getPageCount())
                 .active(book.isActive())
+                .category(book.getCategory())
+                .publisher(book.getPublisher())
+                .author(book.getAuthor())
                 .build();
     }
 
