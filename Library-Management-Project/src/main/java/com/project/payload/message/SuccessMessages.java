@@ -37,4 +37,13 @@ public class SuccessMessages {
 
     public static final String CATEGORY_DELETE_MESSAGE = "Category is deleted successfully :)" ;
 
+
+
+
+    public static final String AUTHOR_SAVED_MESSAGE = "Author is saved successfully :)";
+
+    public static final String AUTHOR_UPDATE_MESSAGE = "Author is updated successfully :)";
+
+    public static final String AUTHOR_DELETE_MESSAGE = "Author is deleted successfully :)" ;
+
 }

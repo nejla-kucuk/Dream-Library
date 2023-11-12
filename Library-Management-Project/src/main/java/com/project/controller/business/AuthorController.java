@@ -43,7 +43,7 @@ public class AuthorController {
     }
 
     // createAuthor()********
-    // http://localhost:8080/authors/4
+    // http://localhost:8080/authors
     @PostMapping("/authors")
     @PreAuthorize("(hasAuthority('ADMIN'))")
     public ResponseMessage<AuthorResponse> createAuthor(@RequestBody @Valid AuthorRequest authorRequest){

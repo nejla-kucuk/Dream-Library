@@ -2,6 +2,7 @@ package com.project.service.business;
 
 import com.project.entity.business.Author;
 import com.project.payload.mapper.AuthorMapper;
+import com.project.payload.message.SuccessMessages;
 import com.project.payload.request.business.AuthorRequest;
 import com.project.payload.response.business.AuthorResponse;
 import com.project.payload.response.business.PublisherResponse;
@@ -69,5 +70,16 @@ public class AuthorService {
     // createAuthor()********
     public ResponseMessage<AuthorResponse> createAuthor(AuthorRequest authorRequest) {
 
+        Author author = authorMapper.mapAuthorRequestToAuthor(authorRequest);
+
+        Author savedAuthor = authorRepository.save(author);
+
+        AuthorResponse response = authorMapper.mapAuthorToAuthorResponse(savedAuthor);
+
+        return ResponseMessage.<AuthorResponse>builder()
+                .message(SuccessMessages.AUTHOR_SAVED_MESSAGE)
+                .httpStatus(HttpStatus.OK)
+                .object(response)
+                .build();
     }
 }
