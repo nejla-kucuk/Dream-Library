@@ -1,7 +1,9 @@
 package com.project.service.business;
 
+import com.project.entity.business.Author;
 import com.project.payload.mapper.AuthorMapper;
 import com.project.payload.response.business.AuthorResponse;
+import com.project.payload.response.business.PublisherResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.AuthorRepository;
 import com.project.service.helper.PageableHelper;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,6 +51,15 @@ public class AuthorService {
 
     // getAuthorById()******
     public ResponseMessage<AuthorResponse> getAuthorById(Long authorId) {
+
+        Author author = util.isAuthorExistById(authorId);
+
+        AuthorResponse response = authorMapper.mapAuthorToAuthorResponse(author);
+
+        return ResponseMessage.<AuthorResponse>builder()
+                .httpStatus(HttpStatus.OK)
+                .object(response)
+                .build();
 
     }
 }
