@@ -52,5 +52,17 @@ public class AuthorController {
     }
 
 
+    // updateAuthorById()********
+    // http://localhost:8080/authors/4
+    @PutMapping("/authors/{authorId}")
+    @PreAuthorize("(hasAuthority('ADMIN'))")
+    public ResponseMessage<AuthorResponse> updateAuthorById(@RequestParam Long authorId,
+                                                            @RequestBody @Valid AuthorRequest authorRequest)
+    {
+        return authorService.updateAuthorById(authorId, authorRequest);
+    }
+
+
+
 
 }

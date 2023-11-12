@@ -82,4 +82,25 @@ public class AuthorService {
                 .object(response)
                 .build();
     }
+
+    // updateAuthorById()******
+    public ResponseMessage<AuthorResponse> updateAuthorById(Long authorId,
+                                                            AuthorRequest authorRequest) {
+
+        util.isAuthorExistById(authorId);
+
+        Author author = authorMapper.mapAuthorRequestToAuthor(authorRequest);
+
+        Author updateAuthor = authorRepository.save(author);
+
+        AuthorResponse response = authorMapper.mapAuthorToAuthorResponse(updateAuthor);
+
+        return ResponseMessage.<AuthorResponse>builder()
+                .message(SuccessMessages.AUTHOR_UPDATE_MESSAGE)
+                .httpStatus(HttpStatus.OK)
+                .object(response)
+                .build();
+
+
+    }
 }
