@@ -1,6 +1,9 @@
 package com.project.service.business;
 
+import com.project.entity.business.Author;
 import com.project.entity.business.Book;
+import com.project.entity.business.Category;
+import com.project.entity.business.Publisher;
 import com.project.payload.mapper.BookMapper;
 import com.project.payload.message.SuccessMessages;
 import com.project.payload.request.business.BookRequest;
@@ -60,11 +63,15 @@ public class BookService {
 
         Book book = bookMapper.mapBookRequestToBook(bookRequest);
 
-        book.getAuthor().setId(bookRequest.getAuthorId());
+        Author author = util.isAuthorExistById(bookRequest.getAuthorId());
 
-        book.getPublisher().setId(bookRequest.getPublisherId());
+        book.setAuthor(author);
 
-        book.getCategory().setId(bookRequest.getCategoryId());
+        Category category =util.isCategoryExistById(bookRequest.getCategoryId());
+        book.setCategory(category);
+
+        Publisher publisher =util.isPublisherExistById(bookRequest.getPublisherId());
+        book.setPublisher(publisher);
 
         book.setActive(Boolean.TRUE);
 

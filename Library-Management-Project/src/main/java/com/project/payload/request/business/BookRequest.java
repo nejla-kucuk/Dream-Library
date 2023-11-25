@@ -28,13 +28,13 @@ public class BookRequest {
     @Nullable
     private Integer pageCount;
 
-    @NotNull(message = "Book authorId must not be empty!")
+
     private Long authorId;
 
-    @NotNull(message = "Book publisherId must not be empty!")
+
     private Long publisherId;
 
-    @NotNull(message = "Book categoryId must not be empty!")
+
     private Long categoryId;
 
     @Nullable
