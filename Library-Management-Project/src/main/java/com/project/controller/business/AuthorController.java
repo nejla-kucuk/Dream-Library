@@ -22,7 +22,6 @@ public class AuthorController {
     // getAllAuthor()******
     // http://localhost:8080//authors?page=1&size=10&sort=name&type=asc
     @GetMapping("/authors")
-    @PreAuthorize("!(hasAuthority('ADMIN') and hasAuthority('EMPLOYEE') and hasAuthority('MEMBER'))")
     public Page<List<AuthorResponse>> getAllAuthor(@RequestParam(value = "page", defaultValue = "0") int page,
                                                    @RequestParam(value = "size", defaultValue = "20") int size,
                                                    @RequestParam(value = "sort", defaultValue = "authorName") String sort,
@@ -35,7 +34,6 @@ public class AuthorController {
     // getAuthorById()******
     // http://localhost:8080/authors/4
     @GetMapping("/authors/{authorId}")
-    @PreAuthorize("!(hasAuthority('ADMIN') and hasAuthority('EMPLOYEE') and hasAuthority('MEMBER'))")
     public ResponseMessage<AuthorResponse> getAuthorById(@PathVariable Long authorId){
 
         return authorService.getAuthorById(authorId);
@@ -45,7 +43,7 @@ public class AuthorController {
     // createAuthor()********
     // http://localhost:8080/authors
     @PostMapping("/authors")
-    @PreAuthorize("(hasAuthority('ADMIN'))")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseMessage<AuthorResponse> createAuthor(@RequestBody @Valid AuthorRequest authorRequest){
 
         return authorService.createAuthor(authorRequest);
@@ -55,7 +53,7 @@ public class AuthorController {
     // updateAuthorById()********
     // http://localhost:8080/authors/4
     @PutMapping("/authors/{authorId}")
-    @PreAuthorize("(hasAuthority('ADMIN'))")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseMessage<AuthorResponse> updateAuthorById(@RequestParam Long authorId,
                                                             @RequestBody @Valid AuthorRequest authorRequest)
     {
@@ -66,7 +64,7 @@ public class AuthorController {
     // deleteAuthorById()********
     // http://localhost:8080/authors/4
     @DeleteMapping("/authors/{authorId}")
-    @PreAuthorize("(hasAuthority('ADMIN'))")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseMessage<AuthorResponse> deleteAuthorById(@RequestParam Long authorId){
 
         return authorService.deleteAuthorById(authorId);

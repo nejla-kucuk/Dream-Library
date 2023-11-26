@@ -22,7 +22,6 @@ public class PublisherController {
     // getAllPublisher()******
     // http://localhost:8080/publishers?page=1&size=10&sort=name&type=asc
     @GetMapping("/publishers")
-    @PreAuthorize("!(hasAuthority('ADMIN') and hasAuthority('EMPLOYEE') and hasAuthority('MEMBER'))")
     public Page<List<PublisherResponse>> getAllPublisher(@RequestParam(value = "page", defaultValue = "0") int page,
                                                          @RequestParam(value = "size", defaultValue = "20") int size,
                                                          @RequestParam(value = "sort", defaultValue = "publisherName") String sort,
@@ -35,7 +34,6 @@ public class PublisherController {
     // getPublisherById()******
     // http://localhost:8080/publishers/4
     @GetMapping("/publishers/{publisherId}")
-    @PreAuthorize("!(hasAuthority('ADMIN') and hasAuthority('EMPLOYEE') and hasAuthority('MEMBER'))")
     public ResponseMessage<PublisherResponse> getPublisherById(@PathVariable Long publisherId){
 
         return publisherService.getPublisherById(publisherId);
@@ -45,7 +43,7 @@ public class PublisherController {
     // createPublisher()****
     // http://localhost:8080/publishers
     @PostMapping("/publishers")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseMessage<PublisherResponse> createPublisher(@RequestBody @Valid PublisherRequest request){
 
         return publisherService.createPublisher(request);
@@ -54,7 +52,7 @@ public class PublisherController {
     // updatePublisherById()****
     // http://localhost:8080/publishers/4
     @PutMapping("/publishers/{publisherId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseMessage<PublisherResponse> updatePublisherById(@PathVariable Long publisherId,
                                                                   @RequestBody @Valid PublisherRequest request){
 
@@ -66,7 +64,7 @@ public class PublisherController {
     // deletePublisherById()*****
     // http://localhost:8080/publishers/4
     @DeleteMapping("/publishers/{publisherId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseMessage<PublisherResponse> deletePublisherById(@PathVariable Long publisherId){
 
         return publisherService.deletePublisherById(publisherId);

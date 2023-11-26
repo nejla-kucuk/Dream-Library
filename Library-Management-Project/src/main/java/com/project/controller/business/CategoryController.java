@@ -21,7 +21,6 @@ public class CategoryController {
     // getAllCategories()*******
     // http://localhost:8080/categories?page=1&size=10&sort=name&type=asc
     @GetMapping("categories")
-    @PreAuthorize("!(hasAuthority('ADMIN') and hasAuthority('EMPLOYEE') and hasAuthority('MEMBER'))")
     public Page<List<CategoryResponse>> getAllCategories(@RequestParam(value = "page", defaultValue = "0") int page,
                                                          @RequestParam(value = "size", defaultValue = "20") int size,
                                                          @RequestParam(value = "sort", defaultValue = "categoryName") String sort,
@@ -33,8 +32,7 @@ public class CategoryController {
 
     // getCategoriesById()****
     // http://localhost:8080/categories/4
-    @GetMapping("categories{categoryId}")
-    @PreAuthorize("!(hasAuthority('ADMIN') and hasAuthority('EMPLOYEE') and hasAuthority('MEMBER'))")
+    @GetMapping("categories/{categoryId}")
     public ResponseMessage<CategoryResponse> getCategoriesById(@PathVariable Long categoryId){
 
         return categoryService.getCategoriesById(categoryId);
@@ -43,7 +41,7 @@ public class CategoryController {
     // createCategory()******
     // http://localhost:8080/categories
     @PostMapping("categories")
-    @PreAuthorize("(hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseMessage<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest categoryRequest){
 
         return categoryService.createCategory(categoryRequest);
@@ -51,8 +49,8 @@ public class CategoryController {
 
     // updateCategoryById()******
     // http://localhost:8080/categories/4
-    @PutMapping("categories{categoryId}")
-    @PreAuthorize("(hasAuthority('ADMIN')")
+    @PutMapping("categories/{categoryId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseMessage<CategoryResponse> updateCategoryById(@PathVariable Long categoryId,
                                                                 @RequestBody @Valid CategoryRequest categoryRequest){
 
@@ -61,8 +59,8 @@ public class CategoryController {
 
     // deleteCategoryById()******
     // http://localhost:8080/categories/4
-    @DeleteMapping("categories{categoryId}")
-    @PreAuthorize("(hasAuthority('ADMIN')")
+    @DeleteMapping("categories/{categoryId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseMessage<CategoryResponse> deleteCategoryById(@PathVariable Long categoryId){
 
         return categoryService.deleteCategoryById(categoryId);
