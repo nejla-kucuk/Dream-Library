@@ -14,7 +14,7 @@ public class CategoryMapper {
         return CategoryResponse.builder()
                 .id(category.getId())
                 .categoryName(category.getCategoryName())
-                .builtIn(category.isBuiltIn())
+                .builtIn(category.getBuiltIn())
                 .sequence(category.getSequence())
                 .build();
     }
@@ -24,7 +24,7 @@ public class CategoryMapper {
 
         return Category.builder()
                 .categoryName(categoryRequest.getCategoryName())
-                .builtIn(categoryRequest.isBuiltIn())
+                .builtIn(categoryRequest.getBuiltIn())
                 .sequence(categoryRequest.getSequence())
                 .build();
     }

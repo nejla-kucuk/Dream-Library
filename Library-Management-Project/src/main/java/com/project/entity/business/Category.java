@@ -25,7 +25,7 @@ public class Category {
     private String categoryName;
 
     @NotNull
-    private boolean builtIn = false;
+    private Boolean builtIn = false;
 
     @NotNull(message = "Squence name must not be empty!")
     // One more than the largest number in sequence fields ??
