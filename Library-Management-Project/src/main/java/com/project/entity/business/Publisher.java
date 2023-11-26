@@ -24,7 +24,7 @@ public class Publisher {
     private String publisherName;
 
     @NotNull
-    private boolean builtIn = false;
+    private Boolean builtIn = false;
 
     // Realitions
    //@OneToMany(mappedBy = "publisher",cascade = CascadeType.REMOVE)

@@ -94,7 +94,7 @@ public class PublisherService {
         util.isPublisherExistById(publisherId);
 
         // Request DTO --> POJO dönüşümü
-        Publisher publisher = publisherMapper.mapPublisherRequestToPublisher(request);
+        Publisher publisher = publisherMapper.mapPublisherRequestToUpdatedPublisher(publisherId,request);
 
         // DB değişlikleri kaydet.
         Publisher savedPublisher = publisherRepository.save(publisher);

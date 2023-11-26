@@ -17,5 +17,5 @@ public class PublisherRequest {
     private String publisherName;
 
     @NotNull
-    private boolean builtIn = false;
+    private Boolean builtIn = false;
 }

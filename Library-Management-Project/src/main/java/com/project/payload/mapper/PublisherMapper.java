@@ -14,7 +14,7 @@ public class PublisherMapper {
         return PublisherResponse.builder()
                 .id(publisher.getId())
                 .publisherName(publisher.getPublisherName())
-                .builtIn(publisher.isBuiltIn())
+                .builtIn(publisher.getBuiltIn())
                 .build();
 
     }
@@ -24,8 +24,17 @@ public class PublisherMapper {
 
         return Publisher.builder()
                 .publisherName(request.getPublisherName())
-                .builtIn(request.isBuiltIn())
+                .builtIn(request.getBuiltIn())
                 .build();
 
+    }
+
+    // Request DTO --> POJO
+    public Publisher mapPublisherRequestToUpdatedPublisher(Long publisherId, PublisherRequest request) {
+
+        return mapPublisherRequestToPublisher(request)
+                .toBuilder()
+                .id(publisherId)
+                .build();
     }
 }
