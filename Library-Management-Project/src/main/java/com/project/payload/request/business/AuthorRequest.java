@@ -17,6 +17,6 @@ public class AuthorRequest {
     private String authorName;
 
     @NotNull
-    private boolean builtIn = false;
+    private Boolean builtIn = false;
 
 }

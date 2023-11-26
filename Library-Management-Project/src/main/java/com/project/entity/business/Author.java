@@ -26,7 +26,7 @@ public class Author {
     private String authorName;
 
     @NotNull
-    private boolean builtIn = false;
+    private Boolean builtIn = false;
 
     // Realitions
    // @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)

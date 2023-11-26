@@ -91,7 +91,7 @@ public class AuthorService {
 
         util.isAuthorExistById(authorId);
 
-        Author author = authorMapper.mapAuthorRequestToAuthor(authorRequest);
+        Author author = authorMapper.mapAuthorRequestToUpdatedAuthor(authorId,authorRequest);
 
         Author updateAuthor = authorRepository.save(author);
 

@@ -14,7 +14,7 @@ public class AuthorMapper {
         return AuthorResponse.builder()
                 .id(author.getId())
                 .authorName(author.getAuthorName())
-                .builtIn(author.isBuiltIn())
+                .builtIn(author.getBuiltIn())
                 .build();
     }
 
@@ -23,7 +23,16 @@ public class AuthorMapper {
 
         return Author.builder()
                 .authorName(authorRequest.getAuthorName())
-                .builtIn(authorRequest.isBuiltIn())
+                .builtIn(authorRequest.getBuiltIn())
+                .build();
+    }
+
+    // DTO Request ---> POJO
+    public Author mapAuthorRequestToUpdatedAuthor(Long authorId, AuthorRequest authorRequest) {
+
+        return mapAuthorRequestToAuthor(authorRequest)
+                .toBuilder()
+                .id(authorId)
                 .build();
     }
 }
