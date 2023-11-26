@@ -20,7 +20,7 @@ public class AuthorController {
     private final AuthorService authorService;
 
     // getAllAuthor()******
-    // http://localhost:8080//authors?page=1&size=10&sort=name&type=asc
+    // http://localhost:8080/authors?page=1&size=10&sort=name&type=asc
     @GetMapping("/authors")
     public Page<List<AuthorResponse>> getAllAuthor(@RequestParam(value = "page", defaultValue = "0") int page,
                                                    @RequestParam(value = "size", defaultValue = "20") int size,
@@ -54,7 +54,7 @@ public class AuthorController {
     // http://localhost:8080/authors/4
     @PutMapping("/authors/{authorId}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseMessage<AuthorResponse> updateAuthorById(@RequestParam Long authorId,
+    public ResponseMessage<AuthorResponse> updateAuthorById(@PathVariable Long authorId,
                                                             @RequestBody @Valid AuthorRequest authorRequest)
     {
         return authorService.updateAuthorById(authorId, authorRequest);
@@ -65,7 +65,7 @@ public class AuthorController {
     // http://localhost:8080/authors/4
     @DeleteMapping("/authors/{authorId}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseMessage<AuthorResponse> deleteAuthorById(@RequestParam Long authorId){
+    public ResponseMessage<AuthorResponse> deleteAuthorById(@PathVariable Long authorId){
 
         return authorService.deleteAuthorById(authorId);
     }

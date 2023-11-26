@@ -59,7 +59,6 @@ public class BookRequest {
     @NotNull
     private boolean featured;
 
-    @NotNull(message = "Create Date must not be empty!")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddTHH:mmZ", timezone = "US")
     private LocalDateTime createDate;
 

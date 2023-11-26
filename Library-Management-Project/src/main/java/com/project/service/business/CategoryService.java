@@ -88,7 +88,7 @@ public class CategoryService {
 
         util.isCategoryExistById(categoryId);
 
-        Category category = categoryMapper.mapCategoryRequestToCategory(categoryRequest);
+        Category category = categoryMapper.mapCategoryRequestToUpdatedCategory(categoryId,categoryRequest);
 
         Category updatedCategory = categoryRepository.save(category);
 

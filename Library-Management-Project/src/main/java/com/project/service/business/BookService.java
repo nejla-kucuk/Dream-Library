@@ -103,11 +103,14 @@ public class BookService {
         // Request DTO --> POJO dönüşümü
         Book book = bookMapper.mapBookRequestToBook(bookRequest);
 
+        book.setCreateDate(LocalDateTime.now());
+
         // Update edilen bilgileri DB'ye kaydet.
         Book savedBook = bookRepository.save(book);
 
         // POJO --> Response DTO dönüşümü
         BookResponse bookResponse = bookMapper.mapBookToBookResponse(savedBook);
+
 
         return ResponseMessage.<BookResponse>builder()
                 .message(SuccessMessages.BOOK_UPDATE_MESSAGE)

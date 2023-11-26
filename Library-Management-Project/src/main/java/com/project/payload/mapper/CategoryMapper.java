@@ -28,4 +28,12 @@ public class CategoryMapper {
                 .sequence(categoryRequest.getSequence())
                 .build();
     }
+
+    public Category mapCategoryRequestToUpdatedCategory(Long categoryId, CategoryRequest categoryRequest) {
+
+        return mapCategoryRequestToCategory(categoryRequest)
+                .toBuilder()
+                .id(categoryId)
+                .build();
+    }
 }
