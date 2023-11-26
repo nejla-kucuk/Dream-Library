@@ -73,7 +73,6 @@ public class Book {
     // private List<Loan> loans = new ArrayList<>();
 
     @ManyToOne // ManyToMany
-    @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
     @ManyToOne //ManyToMay olabilir

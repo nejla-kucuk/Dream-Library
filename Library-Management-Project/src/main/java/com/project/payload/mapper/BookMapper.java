@@ -38,4 +38,13 @@ public class BookMapper {
                 .featured(bookRequest.isFeatured())
                 .build();
     }
+
+    // bookRequest DTO --> POJO
+    public Book mapBookRequestToUpdatedBook(Long bookId, BookRequest bookRequest) {
+
+        return mapBookRequestToBook(bookRequest)
+                .toBuilder()
+                .id(bookId)
+                .build();
+    }
 }

@@ -19,6 +19,6 @@ public class PublisherResponse {
 
     private String publisherName;
 
-    private boolean builtIn = false;
+    private Boolean builtIn;
 
 }

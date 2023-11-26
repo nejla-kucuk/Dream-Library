@@ -20,5 +20,5 @@ public class AuthorResponse {
 
     private String authorName;
 
-    private boolean builtIn = false;
+    private Boolean builtIn;
 }

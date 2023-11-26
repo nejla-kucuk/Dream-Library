@@ -19,7 +19,7 @@ public class CategoryResponse {
 
     private String categoryName;
 
-    private boolean builtIn = false;
+    private Boolean builtIn;
 
     private int sequence;
 }

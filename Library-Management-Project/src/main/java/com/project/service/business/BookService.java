@@ -101,7 +101,7 @@ public class BookService {
         util.isBooksExistById(bookId);
 
         // Request DTO --> POJO dönüşümü
-        Book book = bookMapper.mapBookRequestToBook(bookRequest);
+        Book book = bookMapper.mapBookRequestToUpdatedBook(bookId,bookRequest);
 
         book.setCreateDate(LocalDateTime.now());
 
